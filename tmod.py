@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 # -*- coding: utf-8 -*-
-version = '2021-03-27'
+version = '2021-03-28'
 
 import random
 import os
