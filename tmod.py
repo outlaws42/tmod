@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 # -*- coding: utf-8 -*-
-version = '2021-03-28'
+version = '2021-04-02'
 
 # Imports included with python
 import random
@@ -146,6 +146,26 @@ def open_yaml(file_,type_='relative'):
             with open(get_resource_path(file_), 'w') as fle:
                 yaml.dump(variable, fle)
               
+def open_log_file(file_,type_='home'):
+    home = os.path.expanduser("~")
+    try:
+        if type_ == 'home' or type_ == 'Home':
+            with open(f'{home}/Logs/{file_}', 'r') as path_text:
+                variable=path_text.read()
+        else:
+            with open(get_resource_path(file_), 'r') as text:
+                variable=text.read()
+        return variable
+    except(FileNotFoundError) as e:
+        print(e)
+        print('It is reading here')
+        variable = '0'
+        if type_ == 'home' or type_ == 'Home':
+            with open(f'{home}/{file_}', 'w') as output:
+                output.write(variable)
+        else:
+            with open(get_resource_path(file_), 'w') as output:
+                output.write(variable)
 
 # Gleen info ////////////////////////////////////////////////////
 def html_info(tag,url):
