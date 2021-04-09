@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 # -*- coding: utf-8 -*-
-version = '2021-04-03'
+version = '2021-04-09'
 
 # Imports included with python
 import random
@@ -311,6 +311,6 @@ def check_file_age(fname):
   home = os.path.expanduser("~")
   file_info= os.stat(f'{home}/{fname}')
   now = datetime.now().timestamp()
-  modified = int(file_info.st_atime)
+  modified = int(file_info.st_mtime)
   difference_hour = int(((now - modified)/60)/60)
   return difference_hour
