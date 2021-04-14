@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 # -*- coding: utf-8 -*-
-version = '2021-04-11'
+version = '2021-04-12'
 
 # Imports included with python
 import random
@@ -38,7 +38,7 @@ def get_resource_path(rel_path):
     abs_path_to_resource = os.path.abspath(rel_path_to_resource)
     return abs_path_to_resource
 
-def open_file(file_,type_='relative'):
+def open_file(file_,type_='relative', variable = '0'):
     home = os.path.expanduser("~")
     try:
         if type_ == 'home' or type_ == 'Home':
@@ -51,13 +51,13 @@ def open_file(file_,type_='relative'):
     except(FileNotFoundError) as e:
         print(e)
         print('It is reading here')
-        variable = '0'
         if type_ == 'home' or type_ == 'Home':
             with open(f'{home}/{file_}', 'w') as output:
                 output.write(variable)
         else:
             with open(get_resource_path(file_), 'w') as output:
                 output.write(variable)
+        return variable
 
 def save_file(file_,variable,type_='relative'):
     home = os.path.expanduser("~")
