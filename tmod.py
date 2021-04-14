@@ -8,7 +8,7 @@ import random
 import os
 import os.path
 import sys
-from datetime import datetime, date
+from datetime import datetime, date, time, timezone, tzinfo
 from collections import ChainMap # Requires python 3.3
 import json
 
@@ -271,21 +271,74 @@ def time_now():
     current =  datetime.now().strftime('%H:%M:%S')
     return current
 
-def timestamp_from_string_time(str_time):
+def from_str_time_meridiem(str_time, timestamp = False):
     '''
-    Takes a string time with AM or PM and 
-    converts it to a Unix timestamp
+    Takes a string time with AM or PM, timestamp True or False  
+        timestamp = False returns datetime object today at that time,
+        timestamp = True returns timestamp today at that time
+    Requires from datetime import datetime, date
     '''
     dt_time = datetime.strptime(str_time, '%I:%M %p').time()
-    today_date = datetime.today().date()
-    str_date = today_date.strftime('%Y-%m-%d')
-    year, month, day = str_date.split('-')
-    dt = datetime.combine(
-      date(int(year), int(month), int(day)), dt_time)
+    dt = datetime.combine(date.today(), dt_time)
+    if timestamp == True:
+      ts = int(dt.timestamp())
+      return ts
+    else:
+      return dt
+
+def utc_ts_from_str_time_meridiem(str_time):
+    '''
+    Takes a string time with AM or PM and 
+    converts it to a Unix timestamp with todays date.
+    Requires from datetime import datetime, date
+    '''
+    dt_time = datetime.strptime(str_time, '%I:%M %p').time()
+    dt = datetime.combine(date.today(), dt_time, tzinfo=timezone.utc)
     ts = int(dt.timestamp())
     return ts
 
 
+def from_str_time(str_time, timestamp=False):
+    """ Pass string time HH:MM, timestamp True or False  
+        timestamp = False returns datetime object today at that time,
+        timestamp = True returns timestamp today at that time
+        Requires from datetime import datetime, date, time
+    """
+    hour, minute = str_time.split(':')
+    dt = datetime.combine(date.today(),time(int(hour), int(minute)))
+    if timestamp == True:
+      ts = int(dt.timestamp())
+      return ts
+    else:
+     return dt
+
+def utc_ts_from_str_time(str_time):
+      """ Pass string time HH:MM  return Timestamp today at that time in UTC
+          Requires from datetime import datetime, date, time, timezone
+      """
+      hour, minute = str_time.split(':')
+      dt = datetime.combine(date.today(),time(int(hour), int(minute)), tzinfo=timezone.utc)
+      ts = int(dt.timestamp())
+      return ts
+
+def str_date_from_datetime(dt):
+    """ Datetime return string date
+        Requires from datetime import datetime
+    """
+    str_date = dt.strftime('%Y-%m-%d')
+    return str_date
+
+def datetime_from_str_date(str_date):
+    """ Pass string date YYYY-MM-DD  return datetime
+        Requires from datetime import datetime, date, time
+    """
+    date_request = str_date
+    year, month, day = date_request.split('-')
+    dt = datetime.combine(
+      date(int(year), int(month), int(day)), time())
+    return dt
+
+# Tempature info
 
 def import_temp(file_='temp.txt'):
     '''
@@ -341,3 +394,5 @@ def check_file_age(fname, fdest='relative'):
   modified = int(file_info.st_mtime)
   difference_hour = int(((now - modified)/60)/60)
   return difference_hour
+
+# print(from_str_time_meridiem('04:25 pm', True))
