@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 # -*- coding: utf-8 -*-
-version = '2021-04-12'
+version = '2021-04-15'
 
 # Imports included with python
 import random
