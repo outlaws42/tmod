@@ -45,9 +45,9 @@ def get_resource_path(rel_path):
     return abs_path_to_resource
 
 def open_file(
-    fname,
-    fdest='relative', 
-    variable = '0'
+    fname: str,
+    fdest: str = 'relative', 
+    variable: str = '0'
     ):
     home = os.path.expanduser("~")
     try:
@@ -87,9 +87,9 @@ def save_file(
             output.write(variable)
 
 def save_file_list(
-    fname,
-    variable,
-    fdest='relative'
+    fname: str,
+    variable: str,
+    fdest: str ='relative'
     ):
     home = os.path.expanduser("~")
     if fdest == 'home' or fdest == 'Home':
@@ -100,9 +100,9 @@ def save_file_list(
             output.write(''.join(variable))
 
 def save_json(
-    fname,
-    variable,
-    fdest='relative'
+    fname: str,
+    variable: str,
+    fdest: str = 'relative'
     ):
     home = os.path.expanduser("~")
     if fdest == 'home' or fdest == 'Home':
@@ -113,8 +113,8 @@ def save_json(
             json.dump(variable,output, sort_keys=True, indent=4)
                 
 def open_json(
-    fname,
-    fdest='relative'
+    fname: str,
+    fdest: str = 'relative'
     ):
     home = os.path.expanduser("~")
     try:
@@ -150,8 +150,8 @@ def save_yaml(
             yaml.dump(dict_file,output, sort_keys=True)
 
 def open_yaml(
-    fname,
-    fdest='relative'
+    fname: str,
+    fdest: str ='relative'
     ):
     home = os.path.expanduser("~")
     try:
@@ -174,8 +174,8 @@ def open_yaml(
                 yaml.dump(variable, fle)
               
 def open_log_file(
-    fname,
-    fdest='home'
+    fname: str,
+    fdest: str ='home'
     ):
     home = os.path.expanduser("~")
     try:
@@ -210,7 +210,7 @@ def html_info(tag,url):
         print(final_status)
     return final_status
 
-def list_of_items(item,range_num):
+def list_of_items(item,range_num: int):
         # forecast high / low temp for 3 days    
         list_ = []
         for i in range(range_num):
@@ -224,7 +224,7 @@ def add_to_list(list_in,list_out):
     list_out.append(list_in[i])
   return list_out
 
-def dict_to_list(dictionary):
+def dict_to_list(dictionary: dict):
   """
    Convert dictionary to a list
   """
@@ -235,7 +235,7 @@ def dict_to_list(dictionary):
     list_name.append(temp)
   return list_name.sort()
 
-def combine_dict(dict_list):
+def combine_dict(dict_list: dict):
   """
   Takes a list of dictionaries and combines into one dictionary
   requires from collections import ChainMap and python 3.3 or later
@@ -243,7 +243,11 @@ def combine_dict(dict_list):
   current = dict(ChainMap(*dict_list))
   return current
 
-def group_list(lname, positions, start=0):
+def group_list(
+  lname: list, 
+  positions: int, 
+  start: int = 0
+  ):
   """
   takes a list and groups them into 
   sub lists in the amount of positions
@@ -252,24 +256,29 @@ def group_list(lname, positions, start=0):
     yield lname[start:start + positions]
     start += positions
 
-def random_list(list_):
-    """
-        Randomizes a list
-    """
-    for item in range(1):
-        rand = random.sample(list_, len(list_))
-    return rand
+def random_list(lname: list):
+  """
+  Randomizes a list
+  """
+  for item in range(1):
+    rand = random.sample(lname, len(lname))
+  return rand
 
-def reverse_sublist(self,list_):
-    for i in range(0,len(list_),2):
-        list_[i][:] = list_[i][::-1]
-    return list_
+def reverse_sublist(lname: list):
+  for i in range(0,len(lname),2):
+    lname[i][:] = lname[i][::-1]
+  return lname
     
-def last_n_lines(fname, lines, fdest='relative'):
+def last_n_lines(
+  fname: str, 
+  lines: int, 
+  fdest: str ='relative'
+  ):
   """
   Gets the last so many lines of a file 
   and returns those lines in text.
-  Arguments = filename, number of lines
+  Arguments = filename, number of lines,
+  file destination
   """
   home = os.path.expanduser("~")
   try:
@@ -289,7 +298,11 @@ def last_n_lines(fname, lines, fdest='relative'):
     return 'file not found'
 
 # Date/Time//////////////////////////////////////////////
-def day_diff(month,day,year):
+def day_diff(
+  month: int,
+  day:int,
+  year: int
+  ):
     current = date.today()
     day = date(year,month,day)
     till_day = day - current
@@ -300,7 +313,7 @@ def year_current():
     current_year = current.year
     return current_year
     
-def time_now():
+def time_now() -> str:
     current =  datetime.now().strftime('%H:%M:%S')
     return current
 
@@ -317,7 +330,6 @@ def from_str_time_meridiem(
     timestamp = True returns timestamp today at that time
     utc = True  sets timezone to UTC, False sets timezone to local timezone
     Requires from datetime import datetime, date, time import pytz
-
     '''
     if utc:
       tz =pytz.timezone('UTC')
@@ -360,7 +372,7 @@ def from_str_time(
     else:
      return dttz
 
-def str_date_from_datetime(dt):
+def str_date_from_datetime(dt: datetime):
     """ Datetime return string date
         Requires from datetime import datetime
     """
@@ -397,7 +409,7 @@ def from_str_date(
 
 # Tempature info
 
-def import_temp(fname='temp.txt'):
+def import_temp(fname: str = 'temp.txt'):
     '''
     Import temp from text file then split off each word. 
     returns current temp  
@@ -421,7 +433,7 @@ def import_temp(fname='temp.txt'):
         
     return current_temp
         
-def try_float(temp):
+def try_float(temp: str):
     '''
     Try's to change a string into a float. 
     if it fails it returns original temp
@@ -435,7 +447,10 @@ def try_float(temp):
     return temp
     
 # file information
-def check_file_age(fname, fdest='relative'):
+def check_file_age(
+  fname: str, 
+  fdest: str='relative'
+  ):
   """
   Returns the difference of the current timestamp and the
   timestamp of a file last write in hours 
