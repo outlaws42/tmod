@@ -44,7 +44,11 @@ def get_resource_path(rel_path):
     abs_path_to_resource = os.path.abspath(rel_path_to_resource)
     return abs_path_to_resource
 
-def open_file(fname,fdest='relative', variable = '0'):
+def open_file(
+    fname,
+    fdest='relative', 
+    variable = '0'
+    ):
     home = os.path.expanduser("~")
     try:
         if fdest == 'home' or fdest == 'Home':
@@ -65,103 +69,132 @@ def open_file(fname,fdest='relative', variable = '0'):
                 output.write(variable)
         return variable
 
-def save_file(file_,variable,type_='relative', mode = 'w'):
+def save_file(
+    fname: str,
+    variable: str,
+    fdest: str ='relative', 
+    mode: str = 'w'):
+    """
+    fname = filename, variable = what to save to the file, 
+    fdest = where to save file, mode = w for write or a for append
+    """
     home = os.path.expanduser("~")
-    if type_ == 'home' or type_ == 'Home':
-        with open(f'{home}/{file_}', mode) as output:
+    if fdest == 'home' or fdest == 'Home':
+        with open(f'{home}/{fname}', mode) as output:
             output.write(variable)
     else:
-        with open(get_resource_path(file_), mode) as output:
+        with open(get_resource_path(fname), mode) as output:
             output.write(variable)
 
-def save_file_list(file_,variable,type_='relative'):
+def save_file_list(
+    fname,
+    variable,
+    fdest='relative'
+    ):
     home = os.path.expanduser("~")
-    if type_ == 'home' or type_ == 'Home':
-        with open(f'{home}/{file_}', 'w') as output:
+    if fdest == 'home' or fdest == 'Home':
+        with open(f'{home}/{fname}', 'w') as output:
             output.write(''.join(variable))
     else:
-        with open(get_resource_path(file_), 'w') as output:
+        with open(get_resource_path(fname), 'w') as output:
             output.write(''.join(variable))
 
-def save_json(file_,variable,type_='relative'):
+def save_json(
+    fname,
+    variable,
+    fdest='relative'
+    ):
     home = os.path.expanduser("~")
-    if type_ == 'home' or type_ == 'Home':
-        with open(f'{home}/{file_}', 'w') as output:
+    if fdest == 'home' or fdest == 'Home':
+        with open(f'{home}/{fname}', 'w') as output:
             json.dump(variable,output, sort_keys=True, indent=4)
     else:
-        with open(get_resource_path(file_), 'w') as output:
+        with open(get_resource_path(fname), 'w') as output:
             json.dump(variable,output, sort_keys=True, indent=4)
                 
-def open_json(file_,type_='relative'):
+def open_json(
+    fname,
+    fdest='relative'
+    ):
     home = os.path.expanduser("~")
     try:
-        if type_ == 'home' or type_ == 'Home':
-            with open(f'{home}/{file_}', 'r') as fle:
+        if fdest == 'home' or fdest == 'Home':
+            with open(f'{home}/{fname}', 'r') as fle:
                     variable = json.load(fle)
             return variable
         else:
-            with open(get_resource_path(file_), 'r') as fle:
+            with open(get_resource_path(fname), 'r') as fle:
                     variable = json.load(fle)
             return variable
     except(FileNotFoundError, EOFError) as e:
         print(e)
         variable = 0
-        if type_ == 'home' or type_ == 'Home':
-            with open(f'{home}/{file_}', 'w') as fle:
+        if fdest == 'home' or fdest == 'Home':
+            with open(f'{home}/{fname}', 'w') as fle:
                 json.dump(variable, fle)
         else:
-            with open(get_resource_path(file_), 'w') as fle:
+            with open(get_resource_path(fname), 'w') as fle:
                 json.dump(variable, fle)
 
-def save_yaml(file_,dict_file,type_='relative'):
+def save_yaml(
+    fname: str,
+    dict_file: dict,
+    fdest: str ='relative'
+    ):
     home = os.path.expanduser("~")
-    if type_ == 'home' or type_ == 'Home':
-        with open(f'{home}/{file_}', 'w') as output:
+    if fdest == 'home' or fdest == 'Home':
+        with open(f'{home}/{fname}', 'w') as output:
             yaml.dump(dict_file,output, sort_keys=True)
     else:
-        with open(get_resource_path(file_), 'w') as output:
+        with open(get_resource_path(fname), 'w') as output:
             yaml.dump(dict_file,output, sort_keys=True)
 
-def open_yaml(file_,type_='relative'):
+def open_yaml(
+    fname,
+    fdest='relative'
+    ):
     home = os.path.expanduser("~")
     try:
-        if type_ == 'home' or type_ == 'Home':
-            with open(f'{home}/{file_}', 'r') as fle:
+        if fdest == 'home' or fdest == 'Home':
+            with open(f'{home}/{fname}', 'r') as fle:
                     variable = yaml.full_load(fle)
             return variable
         else:
-            with open(get_resource_path(file_), 'r') as fle:
+            with open(get_resource_path(fname), 'r') as fle:
                     variable = yaml.full_load(fle)
             return variable
     except(FileNotFoundError, EOFError) as e:
         print(e)
         variable = 0
-        if type_ == 'home' or type_ == 'Home':
-            with open(f'{home}/{file_}', 'w') as fle:
+        if fdest == 'home' or fdest == 'Home':
+            with open(f'{home}/{fname}', 'w') as fle:
                 yaml.dump(variable, fle)
         else:
-            with open(get_resource_path(file_), 'w') as fle:
+            with open(get_resource_path(fname), 'w') as fle:
                 yaml.dump(variable, fle)
               
-def open_log_file(file_,type_='home'):
+def open_log_file(
+    fname,
+    fdest='home'
+    ):
     home = os.path.expanduser("~")
     try:
-        if type_ == 'home' or type_ == 'Home':
-            with open(f'{home}/Logs/{file_}', 'r') as path_text:
+        if fdest == 'home' or fdest == 'Home':
+            with open(f'{home}/Logs/{fname}', 'r') as path_text:
                 variable=path_text.read()
         else:
-            with open(get_resource_path(file_), 'r') as text:
+            with open(get_resource_path(fname), 'r') as text:
                 variable=text.read()
         return variable
     except(FileNotFoundError) as e:
         print(e)
         print('It is reading here')
         variable = '0'
-        if type_ == 'home' or type_ == 'Home':
-            with open(f'{home}/{file_}', 'w') as output:
+        if fdest == 'home' or fdest == 'Home':
+            with open(f'{home}/{fname}', 'w') as output:
                 output.write(variable)
         else:
-            with open(get_resource_path(file_), 'w') as output:
+            with open(get_resource_path(fname), 'w') as output:
                 output.write(variable)
 
 # Gleen info ////////////////////////////////////////////////////
@@ -191,30 +224,33 @@ def add_to_list(list_in,list_out):
     list_out.append(list_in[i])
   return list_out
 
-def dict_to_list(list_,dictionary_):
-        # Convert dictionary to a list
-        temp = []
-        list_ = []
-        for key, value in dictionary_.items():
-            temp = [key,value]
-            list_.append(temp)
-        return list_.sort()
+def dict_to_list(dictionary):
+  """
+   Convert dictionary to a list
+  """
+  temp = []
+  list_name = []
+  for key, value in dictionary.items():
+    temp = [key,value]
+    list_name.append(temp)
+  return list_name.sort()
 
 def combine_dict(dict_list):
-        """
-        Takes a list of dictionarys and combines into one dictionary
-        requires from collections import ChainMap and python 3.3 or later
-        """
-        current = dict(ChainMap(*dict_list))
-        return current
+  """
+  Takes a list of dictionaries and combines into one dictionary
+  requires from collections import ChainMap and python 3.3 or later
+  """
+  current = dict(ChainMap(*dict_list))
+  return current
 
-def group_list(list_, positions, start=0):
-    """
-    takes a list and groups them into sub list in the amount of positions
-    """
-    while start <= len(list_) - positions:
-        yield list_[start:start + positions]
-        start += positions
+def group_list(lname, positions, start=0):
+  """
+  takes a list and groups them into 
+  sub lists in the amount of positions
+  """
+  while start <= len(lname) - positions:
+    yield lname[start:start + positions]
+    start += positions
 
 def random_list(list_):
     """
@@ -269,10 +305,10 @@ def time_now():
     return current
 
 def from_str_time_meridiem(
-    str_time, 
-    timestamp = False,
-    utc = False, 
-    tzone = 'US/Eastern'
+    str_time:str, 
+    timestamp: bool = False,
+    utc: bool = False, 
+    tzone: str = 'US/Eastern'
     ):
     '''
     Takes a string time with AM or PM,  timestamp = True or False,
@@ -297,10 +333,10 @@ def from_str_time_meridiem(
       return dttz
 
 def from_str_time(
-    str_time, 
-    timestamp=False, 
-    utc = False, 
-    tzone = 'US/Eastern'
+    str_time: str, 
+    timestamp: bool = False, 
+    utc: bool = False, 
+    tzone: str = 'US/Eastern'
     ):
     """ Pass string time HH:MM, timestamp = True or False,
         utc = True or False, timezone = 'US/Eastern'
@@ -332,11 +368,11 @@ def str_date_from_datetime(dt):
     return str_date
 
 def from_str_date(
-    str_date,
-    timestamp = False,
-    utc = False,
-    tzone = 'US/Eastern'
-    ):
+    str_date: str,
+    timestamp: bool = False,
+    utc: bool = False,
+    tzone: str = 'US/Eastern'
+    ): 
     """ Pass string date YYYY-MM-DD, timestamp = True or False,
         utc = True or False, timezone = 'US/Eastern'
         timestamp = False returns datetime object today at that time,
@@ -361,12 +397,12 @@ def from_str_date(
 
 # Tempature info
 
-def import_temp(file_='temp.txt'):
+def import_temp(fname='temp.txt'):
     '''
     Import temp from text file then split off each word. 
     returns current temp  
     '''
-    tempin = open_file(file_)
+    tempin = open_file(fname)
     templist = tempin.split()
     temp, day, hour = templist
     now_hour = datetime.datetime.now().strftime('%H.%M')
