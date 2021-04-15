@@ -20,6 +20,12 @@ except:
   pass
 
 try:
+  # pip install pytz if needed
+  import pytz
+except:
+  pass
+
+try:
   # pip install requests if needed
   import requests
 except:
@@ -38,34 +44,34 @@ def get_resource_path(rel_path):
     abs_path_to_resource = os.path.abspath(rel_path_to_resource)
     return abs_path_to_resource
 
-def open_file(file_,type_='relative', variable = '0'):
+def open_file(fname,fdest='relative', variable = '0'):
     home = os.path.expanduser("~")
     try:
-        if type_ == 'home' or type_ == 'Home':
-            with open(f'{home}/{file_}', 'r') as path_text:
+        if fdest == 'home' or fdest == 'Home':
+            with open(f'{home}/{fname}', 'r') as path_text:
                 variable=path_text.read()
         else:
-            with open(get_resource_path(file_), 'r') as text:
+            with open(get_resource_path(fname), 'r') as text:
                 variable=text.read()
         return variable
     except(FileNotFoundError) as e:
         print(e)
         print('It is reading here')
-        if type_ == 'home' or type_ == 'Home':
-            with open(f'{home}/{file_}', 'w') as output:
+        if fdest == 'home' or fdest == 'Home':
+            with open(f'{home}/{fname}', 'w') as output:
                 output.write(variable)
         else:
-            with open(get_resource_path(file_), 'w') as output:
+            with open(get_resource_path(fname), 'w') as output:
                 output.write(variable)
         return variable
 
-def save_file(file_,variable,type_='relative'):
+def save_file(file_,variable,type_='relative', mode = 'w'):
     home = os.path.expanduser("~")
     if type_ == 'home' or type_ == 'Home':
-        with open(f'{home}/{file_}', 'w') as output:
+        with open(f'{home}/{file_}', mode) as output:
             output.write(variable)
     else:
-        with open(get_resource_path(file_), 'w') as output:
+        with open(get_resource_path(file_), mode) as output:
             output.write(variable)
 
 def save_file_list(file_,variable,type_='relative'):
@@ -76,15 +82,6 @@ def save_file_list(file_,variable,type_='relative'):
     else:
         with open(get_resource_path(file_), 'w') as output:
             output.write(''.join(variable))
-
-def save_file_append(file_,variable,type_='relative'):
-    home = os.path.expanduser("~")
-    if type_ == 'home' or type_ == 'Home':
-        with open(f'{home}/{file_}', 'a') as output:
-            output.write(variable)
-    else:
-        with open(get_resource_path(file_), 'a') as output:
-            output.write(variable)
 
 def save_json(file_,variable,type_='relative'):
     home = os.path.expanduser("~")
@@ -271,55 +268,61 @@ def time_now():
     current =  datetime.now().strftime('%H:%M:%S')
     return current
 
-def from_str_time_meridiem(str_time, timestamp = False):
+def from_str_time_meridiem(
+    str_time, 
+    timestamp = False,
+    utc = False, 
+    tzone = 'US/Eastern'
+    ):
     '''
-    Takes a string time with AM or PM, timestamp True or False  
-        timestamp = False returns datetime object today at that time,
-        timestamp = True returns timestamp today at that time
-    Requires from datetime import datetime, date
+    Takes a string time with AM or PM,  timestamp = True or False,
+    utc = True or False, timezone = 'US/Eastern'
+    timestamp = False returns datetime object today at that time,
+    timestamp = True returns timestamp today at that time
+    utc = True  sets timezone to UTC, False sets timezone to local timezone
+    Requires from datetime import datetime, date, time import pytz
+
     '''
+    if utc:
+      tz =pytz.timezone('UTC')
+    else:
+        tz = pytz.timezone(tzone)
     dt_time = datetime.strptime(str_time, '%I:%M %p').time()
     dt = datetime.combine(date.today(), dt_time)
-    if timestamp == True:
-      ts = int(dt.timestamp())
+    dttz = tz.localize(dt)
+    if timestamp:
+      ts = int(dttz.timestamp())
       return ts
     else:
-      return dt
+      return dttz
 
-def utc_ts_from_str_time_meridiem(str_time):
-    '''
-    Takes a string time with AM or PM and 
-    converts it to a Unix timestamp with todays date.
-    Requires from datetime import datetime, date
-    '''
-    dt_time = datetime.strptime(str_time, '%I:%M %p').time()
-    dt = datetime.combine(date.today(), dt_time, tzinfo=timezone.utc)
-    ts = int(dt.timestamp())
-    return ts
-
-
-def from_str_time(str_time, timestamp=False):
-    """ Pass string time HH:MM, timestamp True or False  
+def from_str_time(
+    str_time, 
+    timestamp=False, 
+    utc = False, 
+    tzone = 'US/Eastern'
+    ):
+    """ Pass string time HH:MM, timestamp = True or False,
+        utc = True or False, timezone = 'US/Eastern'
         timestamp = False returns datetime object today at that time,
         timestamp = True returns timestamp today at that time
-        Requires from datetime import datetime, date, time
+        utc = True  sets timezone to UTC, False sets timezone to local timezone
+        Requires from datetime import datetime, date, time import pytz
     """
+    if utc:
+      tz =pytz.timezone('UTC')
+    else:
+        tz = pytz.timezone(tzone)
+
     hour, minute = str_time.split(':')
     dt = datetime.combine(date.today(),time(int(hour), int(minute)))
-    if timestamp == True:
-      ts = int(dt.timestamp())
+    dttz = tz.localize(dt)
+    print(dttz)
+    if timestamp:
+      ts = int(dttz.timestamp())
       return ts
     else:
-     return dt
-
-def utc_ts_from_str_time(str_time):
-      """ Pass string time HH:MM  return Timestamp today at that time in UTC
-          Requires from datetime import datetime, date, time, timezone
-      """
-      hour, minute = str_time.split(':')
-      dt = datetime.combine(date.today(),time(int(hour), int(minute)), tzinfo=timezone.utc)
-      ts = int(dt.timestamp())
-      return ts
+     return dttz
 
 def str_date_from_datetime(dt):
     """ Datetime return string date
@@ -328,15 +331,33 @@ def str_date_from_datetime(dt):
     str_date = dt.strftime('%Y-%m-%d')
     return str_date
 
-def datetime_from_str_date(str_date):
-    """ Pass string date YYYY-MM-DD  return datetime
-        Requires from datetime import datetime, date, time
+def from_str_date(
+    str_date,
+    timestamp = False,
+    utc = False,
+    tzone = 'US/Eastern'
+    ):
+    """ Pass string date YYYY-MM-DD, timestamp = True or False,
+        utc = True or False, timezone = 'US/Eastern'
+        timestamp = False returns datetime object today at that time,
+        timestamp = True returns timestamp today at that time
+        utc = True  sets timezone to UTC, False sets timezone to local timezone
+        Requires from datetime import datetime, date, time import pytz
     """
+    if utc:
+      tz =pytz.timezone('UTC')
+    else:
+        tz = pytz.timezone(tzone)
     date_request = str_date
     year, month, day = date_request.split('-')
     dt = datetime.combine(
       date(int(year), int(month), int(day)), time())
-    return dt
+    dttz = tz.localize(dt)
+    if timestamp:
+      ts = int(dttz.timestamp())
+      return ts
+    else:
+     return dttz
 
 # Tempature info
 
@@ -395,4 +416,6 @@ def check_file_age(fname, fdest='relative'):
   difference_hour = int(((now - modified)/60)/60)
   return difference_hour
 
-# print(from_str_time_meridiem('04:25 pm', True))
+print(from_str_date('2021-04-15', True, True))
+
+
