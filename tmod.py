@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 # -*- coding: utf-8 -*-
-version = '2021-04-15'
+version = '2021-04-16'
 
 # Imports included with python
 import random
@@ -47,94 +47,112 @@ def get_resource_path(rel_path):
 def open_file(
     fname: str,
     fdest: str = 'relative', 
-    variable: str = '0'
+    def_content: str = '0'
     ):
+    """
+    fname = filename, fdest = file destination, 
+    def_content = default value if the file doesn't exist
+    opens the file if it exists and returns the contents
+    if it doesn't exitst it creates it writes 
+    the def_content value to it and returns the def_content value
+    import os
+    """
     home = os.path.expanduser("~")
     try:
         if fdest == 'home' or fdest == 'Home':
             with open(f'{home}/{fname}', 'r') as path_text:
-                variable=path_text.read()
+                content=path_text.read()
         else:
             with open(get_resource_path(fname), 'r') as text:
-                variable=text.read()
-        return variable
+                content=text.read()
+        return content
     except(FileNotFoundError) as e:
         print(e)
         print('It is reading here')
         if fdest == 'home' or fdest == 'Home':
             with open(f'{home}/{fname}', 'w') as output:
-                output.write(variable)
+                output.write(def_content)
         else:
             with open(get_resource_path(fname), 'w') as output:
-                output.write(variable)
-        return variable
+                output.write(def_content)
+        return def_content
 
 def save_file(
     fname: str,
-    variable: str,
+    content: str,
     fdest: str ='relative', 
     mode: str = 'w'):
     """
-    fname = filename, variable = what to save to the file, 
+    fname = filename, content = what to save to the file, 
     fdest = where to save file, mode = w for write or a for append
+    import os
     """
     home = os.path.expanduser("~")
     if fdest == 'home' or fdest == 'Home':
         with open(f'{home}/{fname}', mode) as output:
-            output.write(variable)
+            output.write(content)
     else:
         with open(get_resource_path(fname), mode) as output:
-            output.write(variable)
+            output.write(content)
 
 def save_file_list(
     fname: str,
-    variable: str,
+    content: str,
     fdest: str ='relative'
     ):
     home = os.path.expanduser("~")
     if fdest == 'home' or fdest == 'Home':
         with open(f'{home}/{fname}', 'w') as output:
-            output.write(''.join(variable))
+            output.write(''.join(content))
     else:
         with open(get_resource_path(fname), 'w') as output:
-            output.write(''.join(variable))
+            output.write(''.join(content))
 
 def save_json(
     fname: str,
-    variable: str,
+    content: str,
     fdest: str = 'relative'
     ):
     home = os.path.expanduser("~")
     if fdest == 'home' or fdest == 'Home':
         with open(f'{home}/{fname}', 'w') as output:
-            json.dump(variable,output, sort_keys=True, indent=4)
+            json.dump(content,output, sort_keys=True, indent=4)
     else:
         with open(get_resource_path(fname), 'w') as output:
-            json.dump(variable,output, sort_keys=True, indent=4)
+            json.dump(content,output, sort_keys=True, indent=4)
                 
 def open_json(
     fname: str,
-    fdest: str = 'relative'
+    fdest: str = 'relative',
+    def_content: json = {'key': 'value'},
     ):
+    """
+    fname = filename, fdest = file destination, 
+    def_content = default value if the file doesn't exist
+    opens the file if it exists and returns the contents
+    if it doesn't exitst it creates it writes 
+    the def_content value to it and returns the def_content value
+    import os, json
+    """
     home = os.path.expanduser("~")
     try:
         if fdest == 'home' or fdest == 'Home':
             with open(f'{home}/{fname}', 'r') as fle:
-                    variable = json.load(fle)
-            return variable
+                    content = json.load(fle)
+            return content
         else:
             with open(get_resource_path(fname), 'r') as fle:
-                    variable = json.load(fle)
-            return variable
+                    content = json.load(fle)
+            return content
     except(FileNotFoundError, EOFError) as e:
         print(e)
-        variable = 0
         if fdest == 'home' or fdest == 'Home':
-            with open(f'{home}/{fname}', 'w') as fle:
-                json.dump(variable, fle)
+            with open(f'{home}/{fname}', 'w') as output:
+                json.dump(def_content, output, sort_keys=True, indent=4)
         else:
-            with open(get_resource_path(fname), 'w') as fle:
-                json.dump(variable, fle)
+            with open(get_resource_path(fname), 'w') as output:
+                json.dump(def_content, output, sort_keys=True, indent=4)
+        return def_content
 
 def save_yaml(
     fname: str,
@@ -151,52 +169,38 @@ def save_yaml(
 
 def open_yaml(
     fname: str,
-    fdest: str ='relative'
+    fdest: str ='relative',
+    def_content: dict = {'key': 'value'}
     ):
+    """
+    fname = filename, fdest = file destination, 
+    def_content = default value if the file doesn't exist
+    opens the file if it exists and returns the contents
+    if it doesn't exitst it creates it writes 
+    the def_content value to it and returns the def_content value
+    import os, yaml(pip install pyyaml)
+    """
     home = os.path.expanduser("~")
     try:
         if fdest == 'home' or fdest == 'Home':
             with open(f'{home}/{fname}', 'r') as fle:
-                    variable = yaml.full_load(fle)
-            return variable
+                    content = yaml.full_load(fle)
+            return content
         else:
             with open(get_resource_path(fname), 'r') as fle:
-                    variable = yaml.full_load(fle)
-            return variable
+                    content = yaml.full_load(fle)
+            return content
     except(FileNotFoundError, EOFError) as e:
         print(e)
-        variable = 0
-        if fdest == 'home' or fdest == 'Home':
-            with open(f'{home}/{fname}', 'w') as fle:
-                yaml.dump(variable, fle)
-        else:
-            with open(get_resource_path(fname), 'w') as fle:
-                yaml.dump(variable, fle)
-              
-def open_log_file(
-    fname: str,
-    fdest: str ='home'
-    ):
-    home = os.path.expanduser("~")
-    try:
-        if fdest == 'home' or fdest == 'Home':
-            with open(f'{home}/Logs/{fname}', 'r') as path_text:
-                variable=path_text.read()
-        else:
-            with open(get_resource_path(fname), 'r') as text:
-                variable=text.read()
-        return variable
-    except(FileNotFoundError) as e:
-        print(e)
-        print('It is reading here')
-        variable = '0'
         if fdest == 'home' or fdest == 'Home':
             with open(f'{home}/{fname}', 'w') as output:
-                output.write(variable)
+                yaml.dump(def_content,output, sort_keys=True)
         else:
             with open(get_resource_path(fname), 'w') as output:
-                output.write(variable)
-
+                yaml.dump(def_content,output, sort_keys=True)
+        return def_content
+        
+              
 # Gleen info ////////////////////////////////////////////////////
 def html_info(tag,url):
     try:
@@ -211,12 +215,14 @@ def html_info(tag,url):
     return final_status
 
 def list_of_items(item,range_num: int):
-        # forecast high / low temp for 3 days    
-        list_ = []
+        """
+        Not used?
+        """
+        items = []
         for i in range(range_num):
             temp = item
-            list_.append(temp)
-        return list_
+            items.append(temp)
+        return items
 
 def add_to_list(list_in,list_out):
     # takes a list of items
@@ -240,8 +246,8 @@ def combine_dict(dict_list: dict):
   Takes a list of dictionaries and combines into one dictionary
   requires from collections import ChainMap and python 3.3 or later
   """
-  current = dict(ChainMap(*dict_list))
-  return current
+  combined_dict = dict(ChainMap(*dict_list))
+  return combined_dict
 
 def group_list(
   lname: list, 
