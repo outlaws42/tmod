@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 # -*- coding: utf-8 -*-
-version = '2021-04-16'
+version = '2021-04-17'
 
 # Imports included with python
 import random
@@ -132,7 +132,7 @@ def open_json(
     opens the file if it exists and returns the contents
     if it doesn't exitst it creates it writes 
     the def_content value to it and returns the def_content value
-    import os, json
+    requires: import os, yaml
     """
     home = os.path.expanduser("~")
     try:
@@ -156,16 +156,24 @@ def open_json(
 
 def save_yaml(
     fname: str,
-    dict_file: dict,
-    fdest: str ='relative'
+    content: dict,
+    fdest: str ='relative',
+    mode: str = 'w'
     ):
+    """
+    fname = filename, content = data to save, fdest = file destination,
+    mode = 'w' for overwrite file or 'a' to append to the file
+    Takes a dictionary and writes it to file specified. it will either
+    write or append to the file depending on the mode method
+    requires: import os, yaml
+    """
     home = os.path.expanduser("~")
     if fdest == 'home' or fdest == 'Home':
-        with open(f'{home}/{fname}', 'w') as output:
-            yaml.dump(dict_file,output, sort_keys=True)
+        with open(f'{home}/{fname}', mode) as output:
+            yaml.safe_dump(content,output, sort_keys=True)
     else:
-        with open(get_resource_path(fname), 'w') as output:
-            yaml.dump(dict_file,output, sort_keys=True)
+        with open(get_resource_path(fname), mode) as output:
+            yaml.safe_dump(content,output, sort_keys=True)
 
 def open_yaml(
     fname: str,
@@ -184,20 +192,20 @@ def open_yaml(
     try:
         if fdest == 'home' or fdest == 'Home':
             with open(f'{home}/{fname}', 'r') as fle:
-                    content = yaml.full_load(fle)
+                    content = yaml.safe_load(fle)
             return content
         else:
             with open(get_resource_path(fname), 'r') as fle:
-                    content = yaml.full_load(fle)
+                    content = yaml.safe_load(fle)
             return content
     except(FileNotFoundError, EOFError) as e:
         print(e)
         if fdest == 'home' or fdest == 'Home':
             with open(f'{home}/{fname}', 'w') as output:
-                yaml.dump(def_content,output, sort_keys=True)
+                yaml.safe_dump(def_content,output, sort_keys=True)
         else:
             with open(get_resource_path(fname), 'w') as output:
-                yaml.dump(def_content,output, sort_keys=True)
+                yaml.safe_dump(def_content,output, sort_keys=True)
         return def_content
         
               
@@ -324,7 +332,7 @@ def time_now() -> str:
     return current
 
 def from_str_time_meridiem(
-    str_time:str, 
+    str_time: str, 
     timestamp: bool = False,
     utc: bool = False, 
     tzone: str = 'US/Eastern'
@@ -340,7 +348,7 @@ def from_str_time_meridiem(
     if utc:
       tz =pytz.timezone('UTC')
     else:
-        tz = pytz.timezone(tzone)
+      tz = pytz.timezone(tzone)
     dt_time = datetime.strptime(str_time, '%I:%M %p').time()
     dt = datetime.combine(date.today(), dt_time)
     dttz = tz.localize(dt)
@@ -366,7 +374,7 @@ def from_str_time(
     if utc:
       tz =pytz.timezone('UTC')
     else:
-        tz = pytz.timezone(tzone)
+      tz = pytz.timezone(tzone)
 
     hour, minute = str_time.split(':')
     dt = datetime.combine(date.today(),time(int(hour), int(minute)))
@@ -401,7 +409,7 @@ def from_str_date(
     if utc:
       tz =pytz.timezone('UTC')
     else:
-        tz = pytz.timezone(tzone)
+      tz = pytz.timezone(tzone)
     date_request = str_date
     year, month, day = date_request.split('-')
     dt = datetime.combine(
@@ -473,6 +481,6 @@ def check_file_age(
   difference_hour = int(((now - modified)/60)/60)
   return difference_hour
 
-print(from_str_date('2021-04-15', True, True))
+# print(from_str_date('2021-04-15', True, True))
 
 
