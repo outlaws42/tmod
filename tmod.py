@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 # -*- coding: utf-8 -*-
-version = '2021-04-17'
+version = '2021-04-27'
 
 # Imports included with python
 import random
@@ -9,6 +9,7 @@ import os
 import os.path
 import sys
 from datetime import datetime, date, time, timezone, tzinfo
+from smtplib import SMTP
 from collections import ChainMap # Requires python 3.3
 import json
 
@@ -16,6 +17,12 @@ import json
 try:
   # pip install pyyaml if needed
   import yaml
+except:
+  pass
+
+try:
+  # pip install cryptography if needed
+  from cryptography.fernet import Fernet
 except:
   pass
 
@@ -38,6 +45,10 @@ except:
   pass
 
 # File I/O /////////////////////////////////////////
+def home_dir():
+  home = os.path.expanduser('~')
+  return home
+
 def get_resource_path(rel_path):
     dir_of_py_file = os.path.dirname(sys.argv[0])
     rel_path_to_resource = os.path.join(dir_of_py_file, rel_path)
@@ -57,7 +68,7 @@ def open_file(
     the def_content value to it and returns the def_content value
     import os
     """
-    home = os.path.expanduser("~")
+    home = home_dir()
     try:
         if fdest == 'home' or fdest == 'Home':
             with open(f'{home}/{fname}', 'r') as path_text:
@@ -87,7 +98,7 @@ def save_file(
     fdest = where to save file, mode = w for write or a for append
     import os
     """
-    home = os.path.expanduser("~")
+    home = home_dir()
     if fdest == 'home' or fdest == 'Home':
         with open(f'{home}/{fname}', mode) as output:
             output.write(content)
@@ -100,7 +111,7 @@ def save_file_list(
     content: str,
     fdest: str ='relative'
     ):
-    home = os.path.expanduser("~")
+    home = home_dir()
     if fdest == 'home' or fdest == 'Home':
         with open(f'{home}/{fname}', 'w') as output:
             output.write(''.join(content))
@@ -113,7 +124,7 @@ def save_json(
     content: str,
     fdest: str = 'relative'
     ):
-    home = os.path.expanduser("~")
+    home = home_dir()
     if fdest == 'home' or fdest == 'Home':
         with open(f'{home}/{fname}', 'w') as output:
             json.dump(content,output, sort_keys=True, indent=4)
@@ -134,7 +145,7 @@ def open_json(
     the def_content value to it and returns the def_content value
     requires: import os, yaml
     """
-    home = os.path.expanduser("~")
+    home = home_dir()
     try:
         if fdest == 'home' or fdest == 'Home':
             with open(f'{home}/{fname}', 'r') as fle:
@@ -167,7 +178,7 @@ def save_yaml(
     write or append to the file depending on the mode method
     requires: import os, yaml
     """
-    home = os.path.expanduser("~")
+    home = home_dir()
     if fdest == 'home' or fdest == 'Home':
         with open(f'{home}/{fname}', mode) as output:
             yaml.safe_dump(content,output, sort_keys=True)
@@ -188,7 +199,7 @@ def open_yaml(
     the def_content value to it and returns the def_content value
     import os, yaml(pip install pyyaml)
     """
-    home = os.path.expanduser("~")
+    home = home_dir()
     try:
         if fdest == 'home' or fdest == 'Home':
             with open(f'{home}/{fname}', 'r') as fle:
@@ -207,7 +218,36 @@ def open_yaml(
             with open(get_resource_path(fname), 'w') as output:
                 yaml.safe_dump(def_content,output, sort_keys=True)
         return def_content
-        
+  
+def check_dir(dname: str):
+  home = home_dir()
+  dpath = f'{home}/{dname}'
+  dir_exist = os.path.isdir(dpath)
+  return dir_exist
+
+def make_dir(fname:str):
+  home = home_dir()
+  os.mkdir(f'{home}/{fname}')
+
+def remove_file(fname:str):
+  home = home_dir()
+  os.remove(f'{home}/{fname}')
+
+def check_file_dir(fname: str, fdest: str = 'home'):
+  """
+  fname = name of the file or folder,
+  fdest = the destination, either home or relative to CWD
+  Check if file or folder exist returns True or False
+  Requires import os
+  """
+  home = home_dir()
+  if fdest == 'home' or fdest == 'Home':
+    fpath = f'{home}/{fname}'
+  else:
+    fpath = get_resource_path(fname)
+  file_exist = os.path.exists(fpath)
+  return file_exist
+      
               
 # Gleen info ////////////////////////////////////////////////////
 def html_info(tag,url):
@@ -294,7 +334,7 @@ def last_n_lines(
   Arguments = filename, number of lines,
   file destination
   """
-  home = os.path.expanduser("~")
+  home = home_dir()
   try:
     file_lines = []
     if fdest == 'home' or fdest == 'Home':
@@ -310,6 +350,86 @@ def last_n_lines(
   except(FileNotFoundError) as e:
     print(e)
     return 'file not found'
+
+# Encryption
+
+def gen_key(fname: str,):
+  home = home_dir()
+  key = Fernet.generate_key()
+  with open(f'{home}/{fname}', 'wb')as fkey:
+    fkey.write(key)
+
+def decrypt(
+  key: str, 
+  fname: str, 
+  e_fname: str,
+  fdest: str = 'relative'
+  ):
+  """
+  key = key file used to encrypt file,
+  fname = file to encrypt,
+  e_fname = name of the encrypted file,
+  fdest = file destination relative too,
+  Takes a encrypted input file and dencrypts output file
+  requires the tmod open_file and save_file functions
+  requires from cryptography.fernet import Fernet
+  """
+  keyf = Fernet(key)
+  encrypted = open_file(
+    fname = e_fname,
+    fdest = fdest, 
+    mode ="rb") 
+  decrypt_file = keyf.decrypt(encrypted)
+  save_file(
+    fname = fname,
+    content = decrypt_file,
+    fdest = fdest,
+    mode = "wb")
+
+def encrypt(
+  key: str, 
+  fname: str, 
+  e_fname: str, 
+  fdest='relative', 
+  ):
+  """
+  key = key file used to encrypt file,
+  fname = file to encrypt,
+  e_fname = name of the encrypted file,
+  fdest = file destination relative too,
+  Takes a input file and encrypts output file
+  requires tmod open_file and save_file functions
+  requires from cryptography.fernet import Fernet
+  """
+  keyf = Fernet(key)
+  e_file = open_file(
+    fname = fname,
+    fdest = fdest,
+    mode = "rb"
+    )
+  encrypted_file = keyf.encrypt(e_file)
+  save_file(
+    fname = e_fname,
+    content = encrypted_file,
+    fdest = fdest,
+    mode = "wb"
+  )
+
+def decrypt_login(
+  key: str, 
+  e_fname: str,
+  fdest: str = 'relative'
+  ):
+  keyf = Fernet(key)
+  encrypted = open_file(
+    fname = e_fname,
+    fdest = fdest,
+    mode = "rb"
+    )
+  decrypt_file = keyf.decrypt(encrypted)
+  usr = decrypt_file.decode().split(':')
+  return [usr[0],usr[1]]
+
 
 # Date/Time//////////////////////////////////////////////
 def day_diff(
@@ -421,6 +541,7 @@ def from_str_date(
     else:
      return dttz
 
+
 # Tempature info
 
 def import_temp(fname: str = 'temp.txt'):
@@ -459,7 +580,51 @@ def try_float(temp: str):
         print(e)
         temp = temp
     return temp
-    
+
+
+def login_info(
+  fname: str, 
+  fdest: str = 'home'
+  ):
+  """
+  fname = filename of the file that has the login,
+  fdest = The destination of the file
+  Get login info from a yaml file
+  """
+  ps = open_yaml(fname, fdest)
+  for key, value in ps.items():
+    us = key
+    psw = value
+  return [us,psw]
+
+def mail(
+  body: str, 
+  subject: str,
+  send_to: list,
+  login: list
+  ):
+  """
+  body = Body of the message, subject = The subject,
+  send_to = Who you want to send the message to,
+  login = The login information for email.
+  Requires from smtplib import SMTP
+  """
+  us, psw = login
+  message = f'Subject: {subject}\n\n{body}'
+  print(message)
+  try:
+    mail = SMTP('smtp.gmail.com', 587)
+    mail.ehlo()
+    mail.starttls()
+    mail.ehlo()
+    mail.login(us, psw)
+    mail.sendmail(us,send_to, message)
+    mail.close()
+    print('Successfully sent email')
+  except Exception as e:
+    print('Could not send email because')
+    print(e)
+
 # file information
 def check_file_age(
   fname: str, 
@@ -471,7 +636,7 @@ def check_file_age(
   Arguments = filename from home dir
   Requires import os
   """
-  home = os.path.expanduser("~")
+  home = home_dir()
   if fdest == 'home' or fdest == 'Home':
     file_info= os.stat(f'{home}/{fname}')
   else:
@@ -481,6 +646,229 @@ def check_file_age(
   difference_hour = int(((now - modified)/60)/60)
   return difference_hour
 
+# colors 
+def prRedMulti(ntext,text): print(f"{ntext}\033[91m \033[1m{text}\033[00m")
+def prCyanMulti(ntext,text): print(f"{ntext}\033[96m {text}\033[00m")
+def prCyanMultiB(ntext,text): print(f"{ntext}\033[96m \033[1m{text}\033[00m")
+
+def prRedBold(text): print(f"\033[91m \033[1m{text}\033[00m")
+def prGreenBold(text): print(f"\033[92m \033[1m{text}\033[00m")
+def prYellowBold(text): print(f"\033[93m \033[1m{text}\033[00m")
+def prLightPurpleBold(text): print(f"\033[94m \033[1m{text}\033[00m")
+def prPurpleBold(text): print(f"\033[95m \033[1m{text}\033[00m")
+def prCyanBold(text): print(f"\033[96m \033[1m{text}\033[00m")
+def prLightGrayBold(text): print(f"\033[97m \033[1m{text}\033[00m")
+def prBlackBold(text): print(f"\033[98m \033[1m{text}\033[00m")
+
+def prRed(text): print(f"\033[91m {text}\033[00m")
+def prGreen(text): print(f"\033[92m {text}\033[00m")
+def prYellow(text): print(f"\033[93m {text}\033[00m")
+def prLightPurple(text): print(f"\033[94m {text}\033[00m")
+def prPurple(text): print(f"\033[95m {text}\033[00m")
+def prCyan(text): print(f"\033[96m {text}\033[00m")
+def prLightGray(text): print(f"\033[97m {text}\033[00m")
+def prBlack(text): print(f"\033[98m {text}\033[00m")
+
+# Input functions
+def input_loop(
+  subject: str, 
+  description: str,
+  in_type: str= 'email'
+  ):
+  """
+  subject = The subject of the input item,
+  description = the description of the input item,
+  This would be used for a input item that you would
+  want to add to a list.
+  Requires: doesn't require any special imports
+  """
+  prPurpleBold(f'\n{subject.capitalize()}')
+  print(f'You can add as many items as you like.')
+  prRedMulti('When your done adding, Type', 'exit')
+  item_list = []
+  while True:
+    item: str = input(f"Enter the {subject} {description}: ")
+    while (validate_input(item, in_type) == False):
+      if (item == 'exit') or (item == 'Exit') or (item == 'EXIT'):
+        break
+      prRedBold(f'This is not a valid {in_type}')
+      item: str = input(f"Enter the {subject} {description}: ")
+    if (item == 'exit') or (item == 'Exit') or (item == 'EXIT'):
+      length = len(item_list)
+      prRedMulti(f'\nYou have added {length} item(s), Because you typed', item)
+      print(f'That will complete your selection for {subject}.')
+      break
+    else:
+      prCyanMulti(f'You added ', item)
+      item_list.append(item)
+    prCyan(item_list)
+  return item_list
+
+def input_single(
+  in_message: str,
+  in_type: str ='email',
+  max_number: int = 200
+  ):
+  """
+  in_message = the message you want in your input string,
+  in_type = the type of input field. Choices are 
+  email, file, int, time
+  This is for a single item input. This uses "validate_input"
+  to verify that items entered meet requirements for that type of input
+  """
+  if in_type == 'int':
+    item = input(f'{in_message}(Max {max_number}): ')
+  else:
+   item = input(f'{in_message}: ')
+  while (validate_input(item, in_type, max_number) == False):
+    prRedBold(f'This is not a valid {in_type}')
+    if in_type == 'int':
+      item = input(f'{in_message}(max {max_number}): ')
+    else:
+      item = input(f'{in_message}: ')
+  if in_type == 'password':
+    prCyan(f'******')
+  else:
+    prCyanMulti('You entered ', item)
+  if in_type == 'int':
+    return int(item)
+  else:
+    return item
+
+def validate_input(
+  item:str,
+  in_type: str,
+  max_number: int = 200 
+  ):
+  """
+  item = The data entered in the input field,
+  in_type = The type of data it is suposed to be,
+  max_number = the max number that can be ablied this if for int only.
+  Takes the input and checks to see if it is 
+  valid for its data type.
+  """
+  if in_type == 'email':
+    regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+    if (search(regex,item)):
+      return True
+    else:
+      return False
+  elif in_type == 'file':
+    if not item:
+      return False
+    else:
+     return check_file_dir(item)
+  elif in_type == 'password':
+    if not item:
+      return False
+  elif in_type == 'time':
+    try:
+      datetime.strptime(item,'%H:%M').time()
+      return True
+    except ValueError:
+      return False
+  elif in_type == 'int':
+    try:
+      number = int(item)
+      if (number <=0) or (number > max_number):
+        return False
+      return True
+    except Exception:
+      return False
+    
+  else:
+    return False
+
+## Wizard setup
+def config_setup(conf_dir: str):
+  """
+  conf_dir = Configuration dir. This would 
+  normally be in the .config/progName,
+  This commandline wizard creates the 
+  program config dir and populates the 
+  setup configuration file. Sets up username 
+  and password for email notifications
+  """
+  home = home_dir()
+  make_dir(conf_dir)
+
+  no_config = ('\nWe could not find any' 
+  'configuration folder')
+  intr_desc1 = ('This Wizard will ask some questions' 
+  'to setup the configuration needed for the script to function.')
+  intr_desc2 = ('This configuration wizard will only run once.')
+  intr_desc3 = ('\nThe first 2 questions are going' 
+  'to be about your email and password you are using to send.'
+  'this login information will be stored on your local' 
+  'computer encrypted seperate from '
+  'from the rest of the configuration.' 
+  'This is not viewable by browsing the filesystem'
+  )
+
+  gen_key(f'{conf_dir}/.info.key')
+  key = open_file(
+      fname = f'{conf_dir}/.info.key', 
+      fdest = "home",
+      mode ="rb"
+      )
+  prYellowBold(no_config)
+  prGreen(intr_desc1)
+  prGreenBold(intr_desc2)
+  prGreen(intr_desc3)
+
+  email = input_single(
+    in_message = "\nEnter your email",
+    in_type = 'email'
+   )
+  pas = input_single(
+    in_message = "\nEnter your password",
+    in_type = 'password')
+  lo = {email:pas}
+  save_yaml(
+    fname = f'{conf_dir}/.cred.yaml',
+    fdest = 'home',
+    content = lo
+    )
+  encrypt(
+    key = key,
+    fname = f'{conf_dir}/.cred.yaml',
+    e_fname = f'{conf_dir}/.cred_en.yaml',
+    fdest = 'home'
+    )
+  remove_file(f'{conf_dir}/.cred.yaml')
+  run = input_single(
+    in_message ="Enter the time to run the script daily(Example: 05:00)",
+    in_type = "time"
+    )
+  numb_lines = input_single(
+    in_message='Enter the number of lines from the end of log file to send',
+    in_type = 'int',
+    max_number = 400
+    )
+  send_list = input_loop(
+    subject= "email address",
+    description = 'to send to (example@gmail.com)',
+    in_type = 'email')
+  log_list = input_loop(
+    subject= "log file",
+    description = 'to check relative to your home dir (Example: Logs/net_backup.log)',
+    in_type = 'file'
+    )
+  load = {
+    'runtime': run,
+    'lines': int(numb_lines),
+    'sendto': send_list,
+    'logs': log_list
+    }
+  save_yaml(
+    fname =f'{conf_dir}/emailog_set.yaml',
+    fdest = 'home',
+    content = load)
+  prYellowBold('\nThis completes the wizard')
+  print('The configuration file has been written to disk')
+  prCyanMultiB('If you want to change the settings you can edit', f'{home}/{conf_dir}/emailog_set.yaml')
+  prGreenBold("This wizard won't run any more, So the script can now be run automatically\n")
+  prCyanBold("You can stop the script by typing Ctrl + C\n")
 # print(from_str_date('2021-04-15', True, True))
 
 
