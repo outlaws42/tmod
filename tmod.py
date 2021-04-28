@@ -1,16 +1,17 @@
 #! /usr/bin/env python3
 
 # -*- coding: utf-8 -*-
-version = '2021-04-27'
+version = '2021-04-28'
 
 # Imports included with python
 import random
 import os
 import os.path
 import sys
-from datetime import datetime, date, time, timezone, tzinfo
+from datetime import datetime, date, time
 from smtplib import SMTP
 from collections import ChainMap # Requires python 3.3
+from re import search
 import json
 
 # Imports installed through pip
@@ -687,6 +688,19 @@ def check_file_age(
   return difference_hour
 
 # colors 
+def colors():
+  return {
+  'PURPLE' : '\033[95m',
+  'CYAN' : '\033[96m',
+  'DARKCYAN' : '\033[36m',
+  'BLUE'  : '\033[94m',
+  'GREEN' : '\033[92m',
+  'YELLOW' : '\033[93m',
+  'RED' : '\033[91m',
+  'BOLD' : '\033[1m',
+  'UNDERLINE' : '\033[4m',
+  'END' : '\033[0m',
+  } 
 def prRedMulti(ntext,text): print(f"{ntext}\033[91m \033[1m{text}\033[00m")
 def prCyanMulti(ntext,text): print(f"{ntext}\033[96m {text}\033[00m")
 def prCyanMultiB(ntext,text): print(f"{ntext}\033[96m \033[1m{text}\033[00m")
@@ -920,6 +934,9 @@ def config_setup(conf_dir: str):
   prCyanMultiB('If you want to change the settings you can edit', f'{home}/{conf_dir}/emailog_set.yaml')
   prGreenBold("This wizard won't run any more, So the script can now be run automatically\n")
   prCyanBold("You can stop the script by typing Ctrl + C\n")
-# print(from_str_date('2021-04-15', True, True))
+# color = colors()
+
+# print(
+  # f'This is my {color["RED"]}{color["BOLD"]}red{color["END"]} This is the rest of it')
 
 
