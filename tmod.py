@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 # -*- coding: utf-8 -*-
-version = '2021-04-30'
+version = '2021-05-01'
 
 # Imports included with python
 import random
@@ -790,6 +790,7 @@ def input_list(
 def input_single(
   in_message: str,
   in_type: str ='email',
+  fdest: str = 'home',
   max_number: int = 200
   ):
   """
@@ -804,7 +805,12 @@ def input_single(
     item = input(f'{in_message}(Max {max_number}): ')
   else:
    item = input(f'{in_message}: ')
-  while (validate_input(item, in_type, max_number) == False):
+  while (validate_input(
+    item = item, 
+    in_type = in_type,
+    fdest = fdest,
+    max_number = max_number
+    ) == False):
     print(
       f'{c["RED"]}{c["BOLD"]}'
       f'This is not a valid {in_type}{c["END"]}')
@@ -826,6 +832,7 @@ def input_single(
 def validate_input(
   item:str,
   in_type: str,
+  fdest: str = 'home',
   max_number: int = 200 
   ):
   """
@@ -837,6 +844,7 @@ def validate_input(
   valid for its data type.
   """
   if in_type == 'email':
+    print(item)
     regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
     if (search(regex,item)):
       return True
@@ -846,7 +854,7 @@ def validate_input(
     if not item:
       return False
     else:
-     return check_file_dir(item)
+     return check_file_dir(item, fdest)
   elif in_type == 'password':
     if not item:
       return False
@@ -874,7 +882,6 @@ def validate_input(
       return False
   else:
     return False
-
 
 ## Wizard setup
 def config_setup(conf_dir: str):
