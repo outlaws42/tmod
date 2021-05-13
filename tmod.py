@@ -312,8 +312,16 @@ def list_of_items(item,range_num: int):
             items.append(temp)
         return items
 
-def add_to_list(list_in,list_out):
-    # takes a list of items
+def add_to_list(
+  list_in: list,
+  list_out: list
+  ):
+  """ 
+  list_in = list of lists,
+  list_out = list you are adding to.
+  takes a list of items and 
+  adds it to another list
+  """
   for i in range(len(list_in)):
     list_out.append(list_in[i])
   return list_out
@@ -608,17 +616,17 @@ def import_temp(fname: str = 'temp.txt'):
         
     return current_temp
         
-def try_float(temp: str):
+def try_float(item: str):
     '''
     Try's to change a string into a float. 
-    if it fails it returns original temp
-    if it converts it returns the temp as a float
+    if it fails it returns original.
+    if it converts, it returns the item as a float
     '''
     try:
-        temp = float(temp)
+        temp = float(item)
     except Exception as e:
         print(e)
-        temp = temp
+        temp = item
     return temp
 
 
