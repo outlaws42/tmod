@@ -3,28 +3,36 @@ from pytz import timezone
 
 class DT():
 
-  def check_dt_format(self, str_date: str):
+  def check_str_date_format(
+    self, 
+    str_date: str, 
+    format: str = '%Y-%m-%d'
+    ):
     """
     str_date = takes a string date,
     returns True or False depending if
     passed str date fits the format.
     """
-    format = "%Y-%m-%d"
     try:
       dt_status = bool(datetime.strptime(str_date, format))
       return dt_status
     except ValueError as e:
       return False
 
-  def check_dt_time(self, str_date: str):
+  def check_str_time_format(
+    self, 
+    str_time: str, 
+    format: str = '%H:%M'
+    ):
     """
-    str_date = takes a string date,
+    str_time = takes a string time,
+    format = "%H:%M" (24 hour zero padded time), 
+    "%I:%M %p" (12 hour zero padded)
     returns True or False depending if
-    passed str date fits the format.
+    passed str time fits the format.
     """
-    format = "%Y-%m-%d"
     try:
-      dt_status = bool(datetime.strptime(str_date, format))
+      dt_status = bool(datetime.strptime(str_time, format))
       return dt_status
     except ValueError as e:
       return False
@@ -54,65 +62,40 @@ class DT():
     current_year = current.year
     return current_year
 
-  def from_str_time_meridiem(
-    self,
-    str_time: str, 
-    timestamp: bool = False,
-    utc: bool = False, 
-    tzone: str = 'US/Eastern'
-    ):
-    '''
-    Takes a string time with AM or PM,
-    str_time = "HH:MM AM" or PM   
-    timestamp = True or False,
-    utc = True or False, 
-    timezone (default) = 'US/Eastern'
-    timestamp = False returns datetime object today at that time,
-    timestamp = True returns timestamp today at that time
-    utc = True  sets timezone to UTC, False sets timezone to local timezone
-    Requires from datetime import datetime, date, time / 
-    from pytz import timezone
-    '''
-    if utc:
-      tz =timezone('UTC')
-    else:
-      tz = timezone(tzone)
-    try:
-      dt_time = datetime.strptime(str_time, '%I:%M %p').time()
-    except ValueError as e:
-      return 'Time data does not match format HH:MM AM or PM'
-    dt = datetime.combine(date.today(), dt_time)
-    dttz = tz.localize(dt)
-    if timestamp:
-      ts = int(dttz.timestamp())
-      return ts
-    else:
-      return dttz
-
   def from_str_time(
     self,
     str_time: str, 
     timestamp: bool = False, 
     utc: bool = False, 
-    tzone: str = 'US/Eastern'
+    tzone: str = 'US/Eastern',
+    format: str = '%H:%M'
     ):
     """ 
-    str_time = "HH:MM" based 24 hour clock, 
+    str_time = "HH:MM" based on 24 hour clock
+    or "HH:MM am/pm" based on 12 hour clock,\n 
     timestamp = True or False,
-    utc = True or False, timezone = 'US/Eastern'
-    timestamp = False returns datetime object today at that time,
-    timestamp = True returns timestamp today at that time
-    utc = True  sets timezone to UTC, False sets timezone to local timezone
+    False: returns datetime object today at that time
+    True: returns timestamp today at that time\n 
+    utc = True or False,
+    True:  sets timezone to UTC, 
+    False: sets timezone to local timezone\n 
+    tzone = Sets the timezone default 'US/Eastern'\n
+    format = This is the format of the str_time\n 
+    Example: '%H:%M' would be format for 24 hour clock\n
+    Example: '%I:%M %p' would be format for 12 hour clock 
+    with am or pm, add '%S' for seconds\n
     Requires from datetime import datetime, date, time / 
     from pytz import timezone
     """
+    check = self.check_str_time_format(str_time,format)
+    if check == False:
+      return "String time doesn't fit the format given"
     if utc:
       tz =timezone('UTC')
     else:
       tz = timezone(tzone)
-
-    hour, minute = str_time.split(':')
-    dt = datetime.combine(date.today(),time(int(hour), int(minute)))
+    dt_time = datetime.strptime(str_time, format).time() 
+    dt = datetime.combine(date.today(), dt_time)
     dttz = tz.localize(dt)
     if timestamp:
       ts = int(dttz.timestamp())
@@ -142,7 +125,7 @@ class DT():
         Requires from datetime import datetime, date, time / 
         from pytz import timezone
     """
-    dt_validation = self.check_dt_format(str_date)
+    dt_validation = self.check_str_date_format(str_date)
     if dt_validation == False:
       message = ( f'This is not a correct date string ' 
       f'following YYYY-MM-DD You entered {str_date}')
@@ -163,7 +146,55 @@ class DT():
     else:
       return dttz
 
+  def from_datetime(
+    self, 
+    dt: datetime,
+    timestamp: bool = False, 
+    format: str = '%H:%M'
+    ):
+    """
+    dt = datetime\n 
+    format = format you want the string 
+    time or date to be in Default(%H:%M).\n
+    24 hour time = '%H:%M', 
+    12 hour = '%I:%M %p'\n
+    common date = '%Y-%m-%d' (YYYY-MM-DD) 
+    """
+    if type(dt) is not datetime:
+      return "Input is not a datetime object"
+
+    if timestamp == True:
+      output = int(datetime.timestamp(dt))
+    else:
+      output = datetime.strftime(dt, format)
+    return output
+  
+  def from_timestamp(
+    self, 
+    ts,
+    dt: bool = False, 
+    format: str = '%H:%M'
+    ):
+    """
+    dt = datetime\n 
+    format = format you want the string 
+    time or date to be in Default(%H:%M).\n
+    24 hour time = '%H:%M', 
+    12 hour = '%I:%M %p'\n
+    common date = '%Y-%m-%d' (YYYY-MM-DD) 
+    """
+    # if type(ts) is not timestamp:
+    #   return "Input is not a datetime object"
+
+    dtout = datetime.fromtimestamp(ts) 
+    if dt == True:
+      return dtout
+    str_dt = datetime.strftime(dtout, format)
+    return str_dt
+
 if __name__ == "__main__":
   app = DT()
-  test = app.from_str_time(str_time = '05:30 AM')
+  test = app.from_str_time(str_time = '05:30', timestamp = True)
+  test2 = app.from_timestamp(ts = test, dt = True, format = '%H:%M')
   print(test)
+  print(test2)
