@@ -153,7 +153,9 @@ class DT():
     format: str = '%H:%M'
     ):
     """
-    dt = datetime\n 
+    dt = datetime\n
+    timestamp = True returns timestamp
+    False returns string time or date default(False) 
     format = format you want the string 
     time or date to be in Default(%H:%M).\n
     24 hour time = '%H:%M', 
@@ -176,7 +178,9 @@ class DT():
     format: str = '%H:%M'
     ):
     """
-    dt = datetime\n 
+    ts = timestamp\n 
+    dt = True return datetime object, 
+    False return string date or time.\n
     format = format you want the string 
     time or date to be in Default(%H:%M).\n
     24 hour time = '%H:%M', 
@@ -185,16 +189,18 @@ class DT():
     """
     # if type(ts) is not timestamp:
     #   return "Input is not a datetime object"
-
-    dtout = datetime.fromtimestamp(ts) 
+    try:
+      dtout = datetime.fromtimestamp(ts) 
+    except Exception:
+      return "Not a valid datetime"
     if dt == True:
       return dtout
     str_dt = datetime.strftime(dtout, format)
-    return str_dt
+    return str_dt    
 
 if __name__ == "__main__":
   app = DT()
-  test = app.from_str_time(str_time = '05:30', timestamp = True)
+  test = app.from_str_time(str_time = '05:30 pm', timestamp = True)
   test2 = app.from_timestamp(ts = test, dt = True, format = '%H:%M')
   print(test)
   print(test2)
