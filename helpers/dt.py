@@ -200,7 +200,3 @@ class DT():
 
 if __name__ == "__main__":
   app = DT()
-  test = app.from_str_time(str_time = '05:30 pm', timestamp = True)
-  test2 = app.from_timestamp(ts = test, dt = True, format = '%H:%M')
-  print(test)
-  print(test2)
