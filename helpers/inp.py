@@ -1,7 +1,7 @@
 from re import search
 from datetime import datetime
-from helpers.colors import Colors as c
-from helpers.file import FileInfo as fi
+from colors import Colors as c
+from file import FileInfo as fi
 
 class Inp():
   
@@ -110,6 +110,64 @@ class Inp():
       return float(item)
     else:
       return item
+  
+  def input_choice(
+    self,
+    in_message: str,
+    choices: dict = {1: 'option 1', 2: 'option 2'}, 
+    # default_choice: int = 1
+    ):
+    """
+    in_message = the message you want in your input string,\n
+    choices = dictionary of options for your choices.
+    The key being a int the user will select. The value
+    being the option used
+
+    """
+    print(choices)
+    default_choice = 1
+    try:
+      item = int(input(
+       f'{in_message} (default {default_choice}): ')) or default_choice
+    except ValueError as e:
+      print('select a valid option')
+      print(e)
+      item = 1000
+    while (item not in choices.keys()):
+      try:
+        item = int(input(
+         f'{in_message} (default {default_choice}): ')) or default_choice
+      except ValueError as e:
+        print('Select a valid option')
+        print(e)
+        item = 1000
+    return choices[item]
+    # elif (item == 2):
+    #   return choices[2]
+
+    # while (self.validate_input(
+    #   item = item, 
+    #   in_type = in_type,
+    #   fdest = fdest,
+    #   max_number = max_number
+    #   ) == False):
+    #   print(
+    #     f'{c.RED}{c.BOLD}'
+    #     f'This is not a valid {in_type}{c.END}')
+    #   if in_type == 'int' or in_type == 'float':
+    #     item = input(f'{in_message}(max {max_number}): ')
+    #   else:
+    #     item = input(f'{in_message}: ')
+    # if in_type == 'password':
+    #   print(f'{c.CYAN}******{c.END}')
+    # else:
+    #   print(f'You entered {c.CYAN}{item}{c.END}')
+    # if in_type == 'int':
+    #   return int(item)
+    # elif in_type == 'float':
+    #   return float(item)
+    # else:
+    #   return item
 
   def validate_input(
     item: str,
@@ -167,3 +225,5 @@ class Inp():
 
 if __name__ == "__main__":
   app = Inp()
+  test = app.input_choice('Choose on or the other ')
+  print(test)
