@@ -9,3 +9,5 @@ __pycache__/
 .vscode
 *.swp
 tmodenv
+test.py
+helpers/wizard_automl.py

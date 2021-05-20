@@ -1,7 +1,7 @@
 from re import search
 from datetime import datetime
-from colors import Colors as c
-from file import FileInfo as fi
+from helpers.colors import Colors as c
+from helpers.file import FileInfo as fi
 
 class Inp():
   
@@ -115,59 +115,39 @@ class Inp():
     self,
     in_message: str,
     choices: dict = {1: 'option 1', 2: 'option 2'}, 
-    # default_choice: int = 1
+    default_choice: int = 1
     ):
     """
     in_message = the message you want in your input string,\n
     choices = dictionary of options for your choices.
     The key being a int the user will select. The value
-    being the option used
+    being the option used\n
+    default_choice = This is the choice that will be
+    selected if the user doesn't choose any option. 
 
     """
-    print(choices)
-    default_choice = 1
+    print(f"\n{c.BLUE}{c.BOLD}Select a item from the following items{c.END}" )
+    for key, value in choices.items():
+      print(f"{c.BOLD}{key}{c.END} = {c.YELLOW}{c.BOLD}{value}{c.END}")
     try:
-      item = int(input(
-       f'{in_message} (default {default_choice}): ')) or default_choice
-    except ValueError as e:
+      item = input(
+       f'{c.BOLD}{in_message} {c.GREEN}(default {default_choice}):{c.END} ') or default_choice
+      item = int(item)
+    except ValueError:
       print('select a valid option')
-      print(e)
       item = 1000
     while (item not in choices.keys()):
       try:
-        item = int(input(
-         f'{in_message} (default {default_choice}): ')) or default_choice
-      except ValueError as e:
+        item = input(
+       f'{c.BOLD}{in_message} {c.GREEN}(default {default_choice}):{c.END} ') or default_choice
+        item = int(item)
+      except ValueError:
         print('Select a valid option')
-        print(e)
         item = 1000
-    return choices[item]
-    # elif (item == 2):
-    #   return choices[2]
-
-    # while (self.validate_input(
-    #   item = item, 
-    #   in_type = in_type,
-    #   fdest = fdest,
-    #   max_number = max_number
-    #   ) == False):
-    #   print(
-    #     f'{c.RED}{c.BOLD}'
-    #     f'This is not a valid {in_type}{c.END}')
-    #   if in_type == 'int' or in_type == 'float':
-    #     item = input(f'{in_message}(max {max_number}): ')
-    #   else:
-    #     item = input(f'{in_message}: ')
-    # if in_type == 'password':
-    #   print(f'{c.CYAN}******{c.END}')
-    # else:
-    #   print(f'You entered {c.CYAN}{item}{c.END}')
-    # if in_type == 'int':
-    #   return int(item)
-    # elif in_type == 'float':
-    #   return float(item)
-    # else:
-    #   return item
+    choice = choices[item]
+    print(
+      f'{c.BOLD}You chose {c.YELLOW}{choice}{c.END}')
+    return choice
 
   def validate_input(
     item: str,
@@ -225,5 +205,10 @@ class Inp():
 
 if __name__ == "__main__":
   app = Inp()
-  test = app.input_choice('Choose on or the other ')
-  print(test)
+  test = app.input_choice(
+    in_message ='Choose the weather unit of measure', 
+    choices = {
+      1: 'imperial', 
+      2: 'metric',
+    } )
+  
