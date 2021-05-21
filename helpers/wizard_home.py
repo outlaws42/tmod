@@ -1,10 +1,17 @@
 from helpers.colors import Colors as c
 from helpers.file import (
-  Location as loc, FileInfo as fi, FileEdit as fe
+  Location, FileInfo, FileEdit
   )
-from helpers.io import IO as io
-from helpers.inp import Inp as inp
-from helpers.encrypt import Encryption as en
+from helpers.io import IO
+from helpers.inp import Inp
+from helpers.encrypt import Encryption
+
+loc = Location()
+fi  = FileInfo()
+fe = FileEdit()
+io = IO()
+inp = Inp()
+en = Encryption()
 
 class WizardHome():
 
@@ -87,7 +94,6 @@ class WizardHome():
     setup configuration file. Sets up username 
     and password for email notifications
     """
-    # c = colors()
     home = loc.home_dir()
     dir_exists = fi.check_dir(conf_dir)
 
@@ -98,12 +104,12 @@ class WizardHome():
 
     print(
       f'\n{c.YELLOW}{c.BOLD}We could not find any ' 
-      f'configuration folder{c.END}'
+      f'configuration{c.END}'
       f'\n{c.GREEN}This Wizard will ask some questions ' 
       f'to setup the configuration needed for the script to function.{c.END}'
       f'\n{c.GREEN}{c.BOLD}This configuration wizard will only run once.{c.END}\n'
       f'\n{c.GREEN}The first 2 questions are going ' 
-      f'to be about your email and password you are using to send. '
+      f'to be about your email and password you are using to send email. '
       f'\nThis login information will be stored on your local ' 
       f'computer encrypted seperate '
       f'\nfrom the rest of the configuration. ' 
@@ -160,7 +166,7 @@ class WizardHome():
       in_type = "zip"
       )
 
-    units = app.input_choice(
+    units = inp.input_choice(
     in_message ='Choose the weather unit of measure', 
     choices = {
       1: 'imperial', 
@@ -178,15 +184,15 @@ class WizardHome():
         'SENDTO': send_list,
         }
 
-    content = self.file_set(
-      send_list = send_list,
-      conf_dir = conf_dir,
-      conf_file = conf_file
-      )
+    # content = self.file_set(
+    #   send_list = send_list,
+    #   conf_dir = conf_dir,
+    #   conf_file = conf_file
+    #   )
     io.save_yaml(
       fname =f'{conf_dir}/{conf_file}',
       fdest = 'home',
-      content = content)
+      content = load)
     print(
       f'\n{c.YELLOW}{c.BOLD}This completes the wizard{c.END}'
       f'\nThe configuration file has been written to disk'

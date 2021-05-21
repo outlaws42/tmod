@@ -1,7 +1,9 @@
 from re import search
 from datetime import datetime
 from helpers.colors import Colors as c
-from helpers.file import FileInfo as fi
+from helpers.file import FileInfo
+
+fi = FileInfo()
 
 class Inp():
   
@@ -86,7 +88,9 @@ class Inp():
     if in_type == 'int' or in_type == 'float':
       item = input(f'{in_message}(Max {max_number}): ')
     else:
-     item = input(f'{in_message}: ')
+      print("this is where i am headed")
+      item = input(f'{in_message}: ')
+      print(f'{item}, {in_type}')
     while (self.validate_input(
       item = item, 
       in_type = in_type,
@@ -150,6 +154,7 @@ class Inp():
     return choice
 
   def validate_input(
+    self,
     item: str,
     in_type: str,
     fdest: str = 'home',
@@ -166,6 +171,14 @@ class Inp():
     if in_type == 'email':
       print(item)
       regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+      if (search(regex,item)):
+        return True
+        
+      else:
+        return False
+    elif in_type == 'ip':
+      print(item)
+      regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
       if (search(regex,item)):
         return True
       else:
