@@ -207,5 +207,16 @@ class IO():
       print(e)
       return 'file not found'
 
+  def open_settings(
+    self,
+    conf_dir: str, 
+    conf_file: str
+      ):
+      settings = self.open_yaml(
+        fname = f"{conf_dir}/{conf_file}", 
+        fdest = "home"
+        )
+      return settings
+
 if __name__ == "__main__":
   app = IO()

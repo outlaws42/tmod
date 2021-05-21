@@ -88,9 +88,7 @@ class Inp():
     if in_type == 'int' or in_type == 'float':
       item = input(f'{in_message}(Max {max_number}): ')
     else:
-      print("this is where i am headed")
       item = input(f'{in_message}: ')
-      print(f'{item}, {in_type}')
     while (self.validate_input(
       item = item, 
       in_type = in_type,
@@ -173,12 +171,18 @@ class Inp():
       regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
       if (search(regex,item)):
         return True
-        
       else:
         return False
     elif in_type == 'ip':
       print(item)
       regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+      if (search(regex,item)):
+        return True
+      else:
+        return False
+    elif in_type == 'zip':
+      print(item)
+      regex = "\d\d\d\d\d"
       if (search(regex,item)):
         return True
       else:

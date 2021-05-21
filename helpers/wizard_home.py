@@ -184,11 +184,6 @@ class WizardHome():
         'SENDTO': send_list,
         }
 
-    # content = self.file_set(
-    #   send_list = send_list,
-    #   conf_dir = conf_dir,
-    #   conf_file = conf_file
-    #   )
     io.save_yaml(
       fname =f'{conf_dir}/{conf_file}',
       fdest = 'home',
