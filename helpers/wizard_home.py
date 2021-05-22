@@ -18,73 +18,6 @@ class WizardHome():
   def __init__(self):
     pass
 
-
-  # def open_settings(
-  #   self,
-  #   conf_dir: str, 
-  #   conf_file: str
-  #     ):
-  #     settings = io.open_yaml(
-  #       fname = f"{conf_dir}/{conf_file}", 
-  #       fdest = "home"
-  #       )
-  #     print(settings)
-  #     return settings
-
-
-  # def config_exist(
-  #   self,
-  #   conf_dir: str, 
-  #   conf_file: str,
-  #   key: str = 'SENDTO'
-  #   ):
-  #   file_exists = fi.check_file_dir(
-  #     fname = f'{conf_dir}/{conf_file}', 
-  #     fdest = 'home'
-  #     )
-  #   if file_exists == False:
-  #     #  config_setup(conf_dir, conf_file)
-  #     return False
-  #   elif file_exists == True:
-  #     return True
-
-
-  # def file_set(
-  #   self,
-  #   settings: dict,
-  #   conf_dir: str,
-  #   conf_file: str
-  #   ):
-  #   file_exists = fi.check_file_dir(f'{conf_dir}/{conf_file}')
-  #   if file_exists == False:
-  #     load = {
-  #       'USE_API': True,
-  #       'API': 2,
-  #       'BROKER_ADDRESS': '192.168.1.3',
-  #       'ZIP_CODE': '46764',
-  #       'UNITS': 'imperial',
-  #       'DB_URI': 'mongodb://localhost:27017',
-  #       'DATABASE': 'home',
-  #       'SENDTO': send_list,
-  #       }
-  #   else:
-  #     loaded = io.open_yaml(
-  #       fname = f'{conf_dir}/{conf_file}',
-  #       fdest = 'home'
-  #       )
-  #     load = {
-  #       'USE_API': loaded['USE_API'],
-  #       'API': loaded['API'],
-  #       'BROKER_ADDRESS': loaded['BROKER_ADDRESS'],
-  #       'ZIP_CODE': loaded['ZIP_CODE'],
-  #       'UNITS': loaded['UNITS'],
-  #       'DB_URI': loaded['DB_URI'],
-  #       'DATABASE': loaded['DATABASE'],
-  #       'SENDTO': loaded['SENDTO'],
-  #       }
-  #   return load
-
-
   def config_setup(self,conf_dir: str, conf_file: str):
     """
     conf_dir = Configuration dir. This would 
@@ -99,8 +32,6 @@ class WizardHome():
 
     if dir_exists == False:
       fe.make_dir(conf_dir)
-
-    # file_exists = check_file_dir(f'{conf_dir}/{conf_file}')
 
     print(
       f'\n{c.YELLOW}{c.BOLD}We could not find any ' 
