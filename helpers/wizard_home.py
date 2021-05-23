@@ -35,6 +35,8 @@ class WizardHome():
 
     if dir_exists == False:
       fe.make_dir(conf_dir)
+    kf_exists = fi.check_file_dir(f'{conf_dir}/info.key')
+    cred_exists = fi.check_file_dir(f'{conf_dir}/.cred_en.yaml')
 
     print(
       f'\n{c.YELLOW}{c.BOLD}We could not find any ' 
@@ -42,19 +44,19 @@ class WizardHome():
       f'\n{c.GREEN}This Wizard will ask some questions ' 
       f'to setup the configuration needed for the script to function.{c.END}'
       f'\n{c.GREEN}{c.BOLD}This configuration wizard will only run once.{c.END}\n'
-      f'\n{c.GREEN}The first 2 questions are going ' 
-      f'to be about your email and password you are using to send email. '
-      f'\nThis login information will be stored on your local ' 
-      f'computer encrypted seperate '
-      f'\nfrom the rest of the configuration. ' 
-      f'This is not viewable by browsing the filesystem{c.END}'
     )
-    # sento_exists = automl_config_exist(conf_dir, conf_file)
-
-    kf_exists = fi.check_file_dir(f'{conf_dir}/info.key')
-    cred_exists = fi.check_file_dir(f'{conf_dir}/.cred_en.yaml')
 
     if kf_exists == False and cred_exists == False:
+
+      print(
+        f'\n{c.GREEN}The first 2 questions are going ' 
+        f'to be about your email and password you are using to send email. '
+        f'\nThis login information will be stored on your local ' 
+        f'computer encrypted seperate '
+        f'\nfrom the rest of the configuration. ' 
+        f'This is not viewable by browsing the filesystem{c.END}'
+      )
+
       en.gen_key(f'{conf_dir}/.info.key')
       key = io.open_file(
           fname = f'{conf_dir}/.info.key', 
