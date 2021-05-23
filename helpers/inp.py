@@ -35,7 +35,8 @@ class Inp():
     )
     item_list = []
     while True:
-      item: str = input(f"Enter the {subject} {description}: ")
+      item: str = input(
+        f"Enter the {subject} {description}: ")
       while (self.validate_input(item, in_type) == False):
         if ((
           item == outword or 
@@ -63,12 +64,12 @@ class Inp():
         print(
           f'\nYou have added {length} item(s), ' 
           f'Because you typed {c.RED}{c.BOLD}{item}{c.END}\n'
-          f'That will complete your selection for "{subject.capitalize()}".')
+          f'That will complete your selection for "{subject.capitalize()}".\n')
         break
       else:
         print(f'You added {c.CYAN}{item}{c.END}')
         item_list.append(item)
-      print(f'{c.CYAN}{item_list}{c.END}')
+      print(f'{c.CYAN}{item_list}{c.END}\n')
     return item_list
 
   def input_single(
@@ -76,7 +77,8 @@ class Inp():
     in_message: str,
     in_type: str ='email',
     fdest: str = 'home',
-    max_number: int = 200
+    max_number: int = 200,
+    default = ''
     ):
     """
     in_message = the message you want in your input string,
@@ -86,9 +88,9 @@ class Inp():
     to verify that items entered meet requirements for that type of input
     """
     if in_type == 'int' or in_type == 'float':
-      item = input(f'{in_message}(Max {max_number}): ')
+      item = input(f'{in_message}(Max {max_number}) (Default: {default}): ') or default
     else:
-      item = input(f'{in_message}: ')
+      item = input(f'{in_message} (Default: {default}): ') or default
     while (self.validate_input(
       item = item, 
       in_type = in_type,
@@ -99,9 +101,9 @@ class Inp():
         f'{c.RED}{c.BOLD}'
         f'This is not a valid {in_type}{c.END}')
       if in_type == 'int' or in_type == 'float':
-        item = input(f'{in_message}(max {max_number}): ')
+        item = input(f'{in_message}(max {max_number}) (Default: {default}): ') or default
       else:
-        item = input(f'{in_message}: ')
+        item = input(f'{in_message} (Default: {default}): ') or default
     if in_type == 'password':
       print(f'{c.CYAN}******{c.END}')
     else:

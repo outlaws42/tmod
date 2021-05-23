@@ -1,3 +1,4 @@
+from subprocess import check_output
 from helpers.colors import Colors as c
 from helpers.file import (
   Location, FileInfo, FileEdit
@@ -12,6 +13,8 @@ fe = FileEdit()
 io = IO()
 inp = Inp()
 en = Encryption()
+
+ipaddr = check_output(['hostname', '-I']).decode()
 
 class WizardHome():
 
@@ -61,7 +64,8 @@ class WizardHome():
 
       email = inp.input_single(
         in_message = "\nEnter your email",
-        in_type = 'email'
+        in_type = 'email',
+        default = 'appmonitor42@gmail.com'
       )
       pas = inp.input_single(
         in_message = "\nEnter your password",
@@ -80,7 +84,8 @@ class WizardHome():
         )
       fe.remove_file(f'{conf_dir}/.cred.yaml')
     else:
-      print('cred already exists')
+      pass
+      # print('cred already exists')
 
     send_list = inp.input_list(
       subject= "email address",
@@ -89,7 +94,8 @@ class WizardHome():
     
     ipadd = inp.input_single(
       in_message="Enter the IP address for the brooker",
-      in_type = "ip"
+      in_type = "ip",
+      default = ipaddr.strip()
       )
     
     zip_code = inp.input_single(
