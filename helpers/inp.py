@@ -56,7 +56,7 @@ class Inp():
             f'{in_type}{c.END}')
         item: str = input(
           f"{c.BOLD}Enter the {subject} {description}:{c.END} ")
-        print('\n')
+        # print('\n')
       if ((
         item == outword or 
         item == outword.capitalize() or 
@@ -67,7 +67,7 @@ class Inp():
         print(
           f'{c.BOLD}You have added {length} item(s), ' 
           f'Because you typed {c.RED}{item}{c.END}\n'
-          f'{c.BOLD}That will complete your selection for' 
+          f'{c.BOLD}That will complete your selection for ' 
           f'"{subject.capitalize()}".{c.END}\n')
         break
       else:
@@ -76,7 +76,7 @@ class Inp():
         item_list.append(item)
         for i in item_list:
           print(f'{c.BOLD}{c.CYAN}{i}{c.END}')
-    print('\n')
+    # print('\n')
     return item_list
 
   def input_single(
@@ -96,10 +96,12 @@ class Inp():
     """
     if in_type == 'int' or in_type == 'float':
       item = input(
-          f'{c.BOLD}{in_message}(max {max_number}) (Default: {default}): {c.END}') or default
+          f'{c.BOLD}{in_message}{c.GREEN}(max {max_number}) ' 
+          f'(Default: {default}): {c.END}') or default
     else:
       item = input(
-        f'{c.BOLD}{in_message} (Default: {default}): {c.END}') or default
+        f'{c.BOLD}{in_message} {c.GREEN}(Default: '
+        f'{default}): {c.END}') or default
     while (self.validate_input(
       item = item, 
       in_type = in_type,
@@ -111,10 +113,12 @@ class Inp():
         f'This is not a valid {in_type}{c.END}\n')
       if in_type == 'int' or in_type == 'float':
         item = input(
-          f'{c.BOLD}{in_message}(max {max_number}) (Default: {default}): {c.END}') or default
+          f'{c.BOLD}{in_message}{c.GREEN}(max {max_number}) ' 
+          f'(Default: {default}): {c.END}') or default
       else:
         item = input(
-        f'{c.BOLD}{in_message} (Default: {default}): {c.END}') or default
+        f'{c.BOLD}{in_message} {c.GREEN}(Default: '
+        f'{default}): {c.END}') or default
     if in_type == 'password':
       print(f'\n{c.CYAN}******{c.END}\n')
     else:
@@ -195,7 +199,7 @@ class Inp():
         return False
     elif in_type == 'zip':
       # print(item)
-      regex = "\d\d\d\d\d"
+      regex = "^\d{5}$"
       if (search(regex,item)):
         return True
       else:

@@ -41,15 +41,15 @@ class WizardHome():
     print(
       f'\n{c.YELLOW}{c.BOLD}We could not find any ' 
       f'configuration{c.END}'
-      f'\n{c.GREEN}This Wizard will ask some questions ' 
-      f'to setup the configuration needed for the script to function.{c.END}'
-      f'\n{c.GREEN}{c.BOLD}This configuration wizard will only run once.{c.END}\n'
+      f'\n{c.GREEN}{c.BOLD}This Wizard will ask some questions ' 
+      f'to setup the configuration needed for the script to function.'
+      f'\nThis configuration wizard will only run once.{c.END}\n'
     )
 
     if kf_exists == False and cred_exists == False:
 
       print(
-        f'\n{c.GREEN}The first 2 questions are going ' 
+        f'{c.BOLD}{c.GREEN}The first 2 questions are going ' 
         f'to be about your email and password you are using to send email. '
         f'\nThis login information will be stored on your local ' 
         f'computer encrypted seperate '
@@ -129,9 +129,9 @@ class WizardHome():
       content = load)
     print(
       f'\n{c.YELLOW}{c.BOLD}This completes the wizard{c.END}'
-      f'\nThe configuration file has been written to disk'
+      f'\n{c.BOLD}The configuration file has been written to disk'
       f'\nIf you want to change the settings you can edit ' 
-      f'{c.CYAN}{c.BOLD}{home}/{conf_dir}/{conf_file}{c.END}'
+      f'{c.CYAN}{home}/{conf_dir}/{conf_file}{c.END}'
       f'\n{c.GREEN}{c.BOLD}This wizard ' 
       f'won\'t run any more, So the script can ' 
       f'now be run automatically{c.END}\n'
