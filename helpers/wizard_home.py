@@ -14,7 +14,7 @@ io = IO()
 inp = Inp()
 en = Encryption()
 
-ipaddr = check_output(['hostname', '-I']).decode()
+ipaddr = fi.command_var("hostname -I")
 
 class WizardHome():
 
@@ -97,7 +97,7 @@ class WizardHome():
     ipadd = inp.input_single(
       in_message="Enter the IP address for the brooker",
       in_type = "ip",
-      default = ipaddr.strip()
+      default = ipaddr
       )
     
     zip_code = inp.input_single(
