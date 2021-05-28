@@ -1,4 +1,4 @@
-from subprocess import check_output
+from sys import platform
 from helpers.colors import Colors as c
 from helpers.file import (
   Location, FileInfo, FileEdit
@@ -14,7 +14,15 @@ io = IO()
 inp = Inp()
 en = Encryption()
 
-ipaddr = fi.command_var("hostname -I")
+def get_ip():
+  # os = platform
+  if platform.startswith('linux'): 
+    ipaddr = fi.command_var("hostname -I")
+  elif platform.startswith("windows"):
+    ipaddr = fi.command_var("ipconfig /release")
+  elif platform.startswith("darwin"):
+    ipaddr = fi.command_var("ifconfig |grep inet")
+  return ipaddr
 
 class WizardHome():
 
@@ -93,11 +101,12 @@ class WizardHome():
       subject= "email address",
       description = 'to send to (example@gmail.com)',
       in_type = 'email')
-    
+
+    ip = get_ip()
     ipadd = inp.input_single(
       in_message="Enter the IP address for the brooker",
       in_type = "ip",
-      default = ipaddr
+      default = ip
       )
     
     zip_code = inp.input_single(

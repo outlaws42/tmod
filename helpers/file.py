@@ -1,5 +1,5 @@
 from datetime import datetime
-from subprocess import check_output
+from subprocess import check_output, run
 from os import stat, path, mkdir, remove
 import sys
 
@@ -83,18 +83,22 @@ class FileInfo():
 
   def command_var(
     self, 
-    in_command: str
+    in_command: str,
     ):
     """
     in_command = terminal command to run,\n
     returns the result of the command with 
     ending white space removed
     """
+    com = []
+    for i in in_command.split():
+      com.append(i)
     try:
-      raw_command = check_output(in_command, shell=True).decode()
+      raw_command = check_output(com).decode('utf-8')
       command = raw_command.strip()
       return command
-    except Exception:
+    except Exception as e:
+      print(e)
       return "Command Not Found"
 
 

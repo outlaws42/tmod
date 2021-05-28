@@ -185,14 +185,14 @@ class Inp():
     """
     if in_type == 'email':
       # print(item)
-      regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+      regex = '^[a-z0-9]+[-_\.]?[a-z0-9]+[@]\w+[-_\.]?\w+[.]\w{2,3}$'
       if (search(regex,item)):
         return True
       else:
         return False
     elif in_type == 'ip':
       # print(item)
-      regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+      regex ='^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$'
       if (search(regex,item)):
         return True
       else:
