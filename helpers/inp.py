@@ -185,21 +185,32 @@ class Inp():
     """
     if in_type == 'email':
       # print(item)
-      regex = '^[a-z0-9]+[-_\.]?[a-z0-9]+[@]\w+[-_\.]?\w+[.]\w{2,3}$'
+      regex = (
+        r'^[a-zA-Z0-9]+([#$&_*?^{}~-][a-zA_Z0-9]+)*'
+        r'(\.[a-zA-Z0-9#$&_*?^{}~-]+)*[@]\w+[_.-]?\w+[.]\w{2,3}$')
       if (search(regex,item)):
         return True
       else:
         return False
     elif in_type == 'ip':
       # print(item)
-      regex ='^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$'
+      regex =(
+      r'^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}'
+      r'(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$')
       if (search(regex,item)):
         return True
       else:
         return False
-    elif in_type == 'zip':
+    elif in_type == 'zip5':
       # print(item)
       regex = "^\d{5}$"
+      if (search(regex,item)):
+        return True
+      else:
+        return False
+    elif in_type == 'zip9':
+      # print(item)
+      regex = "^([0-9]{5})(-[0-9]{4})?$"
       if (search(regex,item)):
         return True
       else:

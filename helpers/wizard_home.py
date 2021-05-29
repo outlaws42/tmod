@@ -104,18 +104,18 @@ class WizardHome():
 
     ip = get_ip()
     ipadd = inp.input_single(
-      in_message="Enter the IP address for the brooker",
+      in_message="Enter the IP address for the broker",
       in_type = "ip",
       default = ip
       )
     
     zip_code = inp.input_single(
-      in_message="Enter the US Zip code for weather data",
-      in_type = "zip"
+      in_message="Enter the 5 digit US Zip code for weather data",
+      in_type = "zip5"
       )
 
     units = inp.input_choice(
-    in_message ='Choose the weather unit of measure', 
+    in_message ='Choose the unit of measure for weather collection', 
     choices = {
       1: 'imperial', 
       2: 'metric',
