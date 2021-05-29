@@ -95,7 +95,6 @@ class WizardHome():
       fe.remove_file(f'{conf_dir}/.cred.yaml')
     else:
       pass
-      # print('cred already exists')
 
     send_list = inp.input_list(
       subject= "email address",

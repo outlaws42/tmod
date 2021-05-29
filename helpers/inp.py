@@ -179,7 +179,7 @@ class Inp():
     item = The data entered in the input field,
     email, file, password, int, float, time
     in_type = The type of data it is suposed to be,
-    max_number = the max number that can be ablied this if for int only.
+    max_number = the max number that can be applied this is for int only.
     Takes the input and checks to see if it is 
     valid for its data type.
     """
