@@ -1,9 +1,11 @@
-from re import search
+from re import T, search
 from datetime import datetime
 from helpers.colors import Colors as c
 from helpers.file import FileInfo
+from helpers.validate_input import ValidateInput
 
 fi = FileInfo()
+vi = ValidateInput()
 
 class Inp():
   
@@ -15,15 +17,23 @@ class Inp():
     outword: str = 'next'
     ):
     """
-    subject = The subject of the input item,
-    description = the description of the input item,
-    in_type = tthe type of input field. Choices are 
-    email, file, int, time, password
+    subject = The subject of the input item,\n
+    description = the description of the input item,\n
+    in_type = the type of input field. Choices are\n 
+      'email'\n 
+      'file'\n 
+      'number'\n 
+      'time12'\n 
+      'time24'\n 
+      'password'\n
+      'ip4'\n 
+      'ip6'\n 
+      'zip5'\n 
+      'zip9'\n
     outward = This is the word used to present to the user
     to stop adding more items.
     This would be used for a input item that you would
     want to add to a list.
-    Requires: doesn't require any special imports
     """
     print(
       f'\n{c.PURPLE}{c.BOLD}'
@@ -88,9 +98,18 @@ class Inp():
     default = ''
     ):
     """
-    in_message = the message you want in your input string,
-    in_type = the type of input field. Choices are 
-    email, file, int, time, password
+    in_message = the message you want in your input string,\n
+    in_type = the type of input field. Choices are\n 
+      'email'\n 
+      'file'\n 
+      'number'\n 
+      'time12'\n 
+      'time24'\n
+      'password'\n
+      'ip4'\n 
+      'ip6'\n 
+      'zip5'\n 
+      'zip9'\n
     This is for a single item input. This uses "validate_input"
     to verify that items entered meet requirements for that type of input
     """
@@ -177,74 +196,28 @@ class Inp():
     ):
     """
     item = The data entered in the input field,
-    email, file, password, int, float, time
     in_type = The type of data it is suposed to be,
+    email address\n
+    ip address = 'ip4' or 'ip6'\n
+
     max_number = the max number that can be applied this is for int only.
     Takes the input and checks to see if it is 
     valid for its data type.
     """
     if in_type == 'email':
-      # print(item)
-      regex = (
-        r'^[a-zA-Z0-9]+([#$&_*?^{}~-][a-zA_Z0-9]+)*'
-        r'(\.[a-zA-Z0-9#$&_*?^{}~-]+)*[@]\w+[_.-]?\w+[.]\w{2,3}$')
-      if (search(regex,item)):
-        return True
-      else:
-        return False
-    elif in_type == 'ip':
-      # print(item)
-      regex =(
-      r'^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}'
-      r'(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$')
-      if (search(regex,item)):
-        return True
-      else:
-        return False
-    elif in_type == 'zip5':
-      # print(item)
-      regex = "^\d{5}$"
-      if (search(regex,item)):
-        return True
-      else:
-        return False
-    elif in_type == 'zip9':
-      # print(item)
-      regex = "^([0-9]{5})(-[0-9]{4})?$"
-      if (search(regex,item)):
-        return True
-      else:
-        return False
+      vi.validate_email(item=item)
+    elif in_type == 'ip4' or in_type == 'ip6':
+     vi.validate_ip(item=item, ip_type=in_type)
+    elif in_type == 'zip5' or in_type == 'zip9':
+      vi.validate_zip(item=item, zip_type=in_type)
     elif in_type == 'file':
-      if not item:
-        return False
-      else:
-        return fi.check_file_dir(item, fdest)
+     vi.validate_file(item=item,fdest=fdest)
     elif in_type == 'password':
-      if not item:
-        return False
-    elif in_type == 'time':
-      try:
-        datetime.strptime(item,'%H:%M').time()
-        return True
-      except ValueError:
-        return False
-    elif in_type == 'int':
-      try:
-        number = int(item)
-        if (number <=0) or (number > max_number):
-          return False
-        return True
-      except Exception:
-        return False
-    elif in_type == 'float':
-      try:
-        number = float(item)
-        if (number <=0) or (number > max_number):
-          return False
-        return True
-      except Exception:
-        return False
+     vi.validate_password(item=item)
+    elif in_type == 'time24' or in_type == 'time12':
+      vi.validate_time(item=item, time_type=in_type)
+    elif in_type == 'number':
+      vi.validate_num(item=item, max_number=max_number)
     else:
       return False
 
