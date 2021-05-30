@@ -20,16 +20,16 @@ class Inp():
     subject = The subject of the input item,\n
     description = the description of the input item,\n
     in_type = the type of input field. Choices are\n 
-      'email'\n 
-      'file'\n 
-      'number'\n 
-      'time12'\n 
-      'time24'\n 
-      'password'\n
-      'ip4'\n 
-      'ip6'\n 
-      'zip5'\n 
-      'zip9'\n
+      'email' - This will expect a email address\n 
+      'file' - this will expect a valid file at location specified\n 
+      'number' - This will expect a number\n 
+      'time12' - this will expect a 12 hour time (HH:MM am or pm)\n 
+      'time24' - This will expect a 24 hour time (HH:MM)\n
+      'password' - This will expect a password\n
+      'ip4' - This will expect a ipv4 ip\n 
+      'ip6' - This will expect a ipv6 ip\n 
+      'zip5' - This will expect a 5 digit US zip code\n 
+      'zip9' - This will expect a 9 digit US zip code\n
     outward = This is the word used to present to the user
     to stop adding more items.
     This would be used for a input item that you would
@@ -100,16 +100,16 @@ class Inp():
     """
     in_message = the message you want in your input string,\n
     in_type = the type of input field. Choices are\n 
-      'email'\n 
-      'file'\n 
-      'number'\n 
-      'time12'\n 
-      'time24'\n
-      'password'\n
-      'ip4'\n 
-      'ip6'\n 
-      'zip5'\n 
-      'zip9'\n
+      'email' - This will expect a email address\n 
+      'file' - this will expect a valid file at location specified\n 
+      'number' - This will expect a number\n 
+      'time12' - this will expect a 12 hour time (HH:MM am or pm)\n 
+      'time24' - This will expect a 24 hour time (HH:MM)\n
+      'password' - This will expect a password\n
+      'ip4' - This will expect a ipv4 ip\n 
+      'ip6' - This will expect a ipv6 ip\n 
+      'zip5' - This will expect a 5 digit US zip code\n 
+      'zip9' - This will expect a 9 digit US zip code\n
     This is for a single item input. This uses "validate_input"
     to verify that items entered meet requirements for that type of input
     """
