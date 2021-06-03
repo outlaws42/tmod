@@ -88,6 +88,42 @@ class Inp():
           print(f'{c.BOLD}{c.CYAN}{i}{c.END}')
     # print('\n')
     return item_list
+  
+  def input_password(
+    self, 
+    lower: str = '1',
+    upper: str = '1',
+    number: str = '1',
+    special: str = '1',
+    length: str = '8'
+    ):
+    """
+    upper = Minimum uppercase characters required\n
+    lower = Minimum lowercase characters required\n
+    number = Minimum numbers required\n
+    special = Minimum special characters required\n
+    length = Minimum characters the password needs to be\n
+    """
+    print(
+      f'\n{c.BOLD}{c.PURPLE}Password Minumum Requirements\n'
+      f'{c.GREEN}{lower}{c.WHITE} lowercase character(s),\n'
+      f'{c.GREEN}{special}{c.WHITE} of * # $ % & !,\n' 
+      f'{c.GREEN}{upper}{c.WHITE} UPPERCASE character(s),\n'
+      f'{c.GREEN}{number}{c.WHITE} number\n' 
+      f'{c.GREEN}{length}{c.WHITE} characters long{c.END}')
+    item = input(f'{c.BOLD}{c.YELLOW}Enter a password: {c.END}')
+    while(vi.validate_password(
+      item=item,
+      lower=lower,
+      upper=upper,
+      number=number,
+      special=special,
+      length=length)==False):
+      print(f'\n{c.BOLD}{c.RED}This is not valed, you entered {c.WHITE}{item}\n'
+      f' It doesn\'t meet the minimum requirements{c.END}')
+      item = input(f'{c.BOLD}{c.YELLOW}Enter a password: {c.END}')
+    print(f'\n{c.BOLD}That is a valid password {c.END}')
+    return item
 
   def input_single(
     self,
@@ -95,7 +131,8 @@ class Inp():
     in_type: str ='email',
     fdest: str = 'home',
     max_number: int = 200,
-    default = ''
+    default = '',
+    req: str = None
     ):
     """
     in_message = the message you want in your input string,\n
@@ -105,11 +142,11 @@ class Inp():
       'number' - This will expect a number\n 
       'time12' - this will expect a 12 hour time (HH:MM am or pm)\n 
       'time24' - This will expect a 24 hour time (HH:MM)\n
-      'password' - This will expect a password\n
       'ip4' - This will expect a ipv4 ip\n 
       'ip6' - This will expect a ipv6 ip\n 
       'zip5' - This will expect a 5 digit US zip code\n 
       'zip9' - This will expect a 9 digit US zip code\n
+    max_number = if a number input the max number you can enter
     This is for a single item input. This uses "validate_input"
     to verify that items entered meet requirements for that type of input
     """
@@ -164,9 +201,10 @@ class Inp():
     selected if the user doesn't choose any option. 
 
     """
+    
     print(f"\n{c.BLUE}{c.BOLD}Select a item from the following items{c.END}" )
     for key, value in choices.items():
-      print(f"{c.BOLD}{key}{c.END} = {c.YELLOW}{c.BOLD}{value}{c.END}")
+      print(f"{c.BOLD}{key} = {c.YELLOW}{value}{c.END}")
     try:
       item = input(
        f'{c.BOLD}{in_message} {c.GREEN}(default {default_choice}):{c.END} ') or default_choice

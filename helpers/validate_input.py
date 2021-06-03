@@ -81,13 +81,31 @@ class ValidateInput():
     
   def validate_password(
     self, 
-    item: str
+    item: str,
+    upper: str = '1',
+    lower: str = '1',
+    number: str = '1',
+    special: str = '1',
+    length: str = '8',
     ):
     """
     item = password\n
-    return True if the field is not blank\n
+    upper = Minimum uppercase characters required\n
+    lower = Minimum lowercase characters required\n
+    number = Minimum numbers required\n
+    special = Minimum special characters required\n
+    length = Minimum characters the password needs to be\n
+    return True if item meets the requirements\n
     """
+    val_pass = (
+      r'^(?=(?:.*[a-z]){'+lower+'})(?=(?:.*[A-Z]){'+upper+'})'
+      r'(?=(?:.*[0-9]){'+number+'})(?=(?:.*[*#$%&!]){'+special+'})'
+      r'[A-Za-z0-9*#$%&!]{'+length+',}$')
     if not item:
+      return False
+    if (search(val_pass,item)):
+      return True
+    else:
       return False
   
   def validate_time(
