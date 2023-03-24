@@ -77,9 +77,7 @@ class WizardHome():
         in_type = 'email',
         default = 'appmonitor42@gmail.com'
       )
-      pas = inp.input_single(
-        in_message = "\nEnter your password",
-        in_type = 'password')
+      pas = inp.input_password()
       lo = {email:pas}
       io.save_yaml(
         fname = f'{conf_dir}/.cred.yaml',
@@ -104,7 +102,7 @@ class WizardHome():
     ip = get_ip()
     ipadd = inp.input_single(
       in_message="Enter the IP address for the broker",
-      in_type = "ip",
+      in_type = "ip4",
       default = ip
       )
     

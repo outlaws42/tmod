@@ -196,7 +196,20 @@ class DT():
     if dt == True:
       return dtout
     str_dt = datetime.strftime(dtout, format)
-    return str_dt    
+    return str_dt
+
+  def from_iso(
+    self,
+    iso,
+    timestamp: bool = False
+    ):
+    
+    dt = datetime.fromisoformat(iso)
+    if timestamp == False:
+      return dt
+    else:
+      ts = int(datetime.timestamp(dt))
+      return ts
 
 if __name__ == "__main__":
   app = DT()

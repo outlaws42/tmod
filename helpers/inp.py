@@ -175,10 +175,8 @@ class Inp():
         item = input(
         f'{c.BOLD}{in_message} {c.GREEN}(Default: '
         f'{default}): {c.END}') or default
-    if in_type == 'password':
-      print(f'\n{c.CYAN}******{c.END}\n')
-    else:
-      print(f'\n{c.BOLD}You entered {c.CYAN}{item}{c.END}\n')
+    
+    print(f'\n{c.BOLD}You entered {c.CYAN}{item}{c.END}\n')
     if in_type == 'int':
       return int(item)
     elif in_type == 'float':
