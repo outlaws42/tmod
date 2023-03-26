@@ -372,7 +372,11 @@ def combine_dict(dict_list: dict):
     return combined_dict
 
 
-def group_list(lname: list, positions: int, start: int = 0):
+def group_list(
+    lname: list,
+    positions: int,
+    start: int = 0,
+):
     """
     takes a list and groups them into
     sub lists in the amount of positions
@@ -628,7 +632,10 @@ def try_float(item: str):
     return temp
 
 
-def login_info(fname: str, fdest: str = "home"):
+def login_info(
+    fname: str,
+    fdest: str = "home",
+):
     """
     fname = filename of the file that has the login,
     fdest = The destination of the file
@@ -641,7 +648,12 @@ def login_info(fname: str, fdest: str = "home"):
     return [us, psw]
 
 
-def mail(body: str, subject: str, send_to: list, login: list):
+def mail(
+    body: str,
+    subject: str,
+    send_to: list,
+    login: list,
+):
     """
     body = Body of the message, subject = The subject,
     send_to = Who you want to send the message to,
@@ -778,7 +790,10 @@ def prBlack(text):
 
 # Input functions
 def input_list(
-    subject: str, description: str, in_type: str = "email", outword: str = "next"
+    subject: str,
+    description: str,
+    in_type: str = "email",
+    outword: str = "next",
 ):
     """
     subject = The subject of the input item,
@@ -842,7 +857,10 @@ def input_list(
 
 
 def input_single(
-    in_message: str, in_type: str = "email", fdest: str = "home", max_number: int = 200
+    in_message: str,
+    in_type: str = "email",
+    fdest: str = "home",
+    max_number: int = 200,
 ):
     """
     in_message = the message you want in your input string,
@@ -857,10 +875,14 @@ def input_single(
     else:
         item = input(f"{in_message}: ")
     while (
-        validate_input(item=item, in_type=in_type, fdest=fdest, max_number=max_number)
-        == False
+        validate_input(
+            item=item, in_type=in_type,
+            fdest=fdest, max_number=max_number,
+            ) is False
     ):
-        print(f'{c["RED"]}{c["BOLD"]}' f'This is not a valid {in_type}{c["END"]}')
+        print(
+            f'{c["RED"]}{c["BOLD"]}'
+            f'This is not a valid {in_type}{c["END"]}',)
         if in_type == "int" or in_type == "float":
             item = input(f"{in_message}(max {max_number}): ")
         else:
@@ -877,7 +899,7 @@ def input_single(
         return item
 
 
-def validate_input(item: str, in_type: str, fdest: str = "home", max_number: int = 200):
+def validate_input(item: str, in_type: str, fdest: str = "home", max_number: int = 200,):
     """
     item = The data entered in the input field,
     email, file, password, int, float, time
