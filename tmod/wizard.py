@@ -5,8 +5,18 @@
 """
 Functions to work with doing a wizard to setup configuration files.
 """
+
+# Standard Library Imports
+from re import search
+
 # Imports from tmods
-from colors import colors
+from colors import (
+    colors,
+    prYellowBold,
+    prGreen,
+    prGreenBold,
+    )
+
 
 __author__ = "Troy Franks"
 __version__ = "2023-03-24"
@@ -24,7 +34,7 @@ def input_list(
     """
     subject = The subject of the input item,
     description = the description of the input item,
-    in_type = tthe type of input field. Choices are
+    in_type = the type of input field. Choices are
     email, file, int, time, password
     outward = This is the word used to present to the user
     to stop adding more items.
@@ -44,30 +54,21 @@ def input_list(
     item_list = []
     while True:
         item: str = input(f"Enter the {subject} {description}: ")
-        while validate_input(item, in_type) == False:
-            if (
-                item == outword
-                or item == outword.capitalize()
-                or item == outword.upper()
-            ) and len(item_list) != 0:
+        while validate_input(item, in_type) is False:
+            if item.upper() == outword.upper() and len(item_list) != 0:
                 break
-            if (
-                item == outword
-                or item == outword.capitalize()
-                or item == outword.upper()
-            ):
+            if item.upper() == outword.upper():
                 print(
                     f'{c["RED"]}{c["BOLD"]}You need to enter at least 1 '
                     f'{in_type}{c["END"]}'
                 )
             else:
                 print(
-                    f'{c["RED"]}{c["BOLD"]}This is not a valid ' f'{in_type}{c["END"]}'
+                    f'{c["RED"]}{c["BOLD"]}This is not a valid '
+                    f'{in_type}{c["END"]}'
                 )
             item: str = input(f"Enter the {subject} {description}: ")
-        if (
-            item == outword or item == outword.capitalize() or item == outword.upper()
-        ) and len(item_list) != 0:
+        if item.upper() == outword.upper() and len(item_list) != 0:
             length = len(item_list)
             print(
                 f"\nYou have added {length} item(s), "
@@ -82,7 +83,7 @@ def input_list(
     return item_list
 
 
-ef input_single(
+def input_single(
     in_message: str,
     in_type: str = "email",
     fdest: str = "home",
@@ -130,7 +131,7 @@ def validate_input(
     in_type: str,
     fdest: str = "home",
     max_number: int = 200,
-    ):
+):
 
     """
     item = The data entered in the input field,
@@ -180,3 +181,89 @@ def validate_input(
             return False
     else:
         return False
+
+# Wizard setup
+
+
+def config_setup(conf_dir: str):
+    """
+    conf_dir = Configuration dir. This would
+    normally be in the .config/progName,
+    This commandline wizard creates the
+    program config dir and populates the
+    setup configuration file. Sets up username
+    and password for email notifications
+    """
+    c = colors()
+    home = home_dir()
+    make_dir(conf_dir)
+
+    print(
+        f'\n{c["YELLOW"]}{c["BOLD"]}We could not find any '
+        f'configuration folder{c["END"]}'
+        f'\n{c["GREEN"]}This Wizard will ask some questions '
+        f'to setup the configuration needed for the script to function.{c["END"]}'
+        f'\n{c["GREEN"]}{c["BOLD"]}This configuration wizard will only run once.{c["END"]}\n'
+        f'\n{c["GREEN"]}The first 2 questions are going '
+        f"to be about your email and password you are using to send. "
+        f"\nThis login information will be stored on your local "
+        f"computer encrypted seperate "
+        f"\nfrom the rest of the configuration. "
+        f'This is not viewable by browsing the filesystem{c["END"]}'
+    )
+
+    gen_key(f"{conf_dir}/.info.key")
+    key = open_file(fname=f"{conf_dir}/.info.key", fdest="home", mode="rb")
+    prYellowBold(no_config)
+    prGreen(intr_desc1)
+    prGreenBold(intr_desc2)
+    prGreen(intr_desc3)
+
+    email = input_single(in_message="\nEnter your email", in_type="email")
+    pas = input_single(in_message="\nEnter your password", in_type="password")
+    lo = {email: pas}
+    save_yaml(fname=f"{conf_dir}/.cred.yaml", fdest="home", content=lo)
+    encrypt(
+        key=key,
+        fname=f"{conf_dir}/.cred.yaml",
+        e_fname=f"{conf_dir}/.cred_en.yaml",
+        fdest="home",
+    )
+    remove_file(f"{conf_dir}/.cred.yaml")
+    run = input_single(
+        in_message="Enter the time to run the script daily(Example: 05:00)",
+        in_type="time",
+    )
+    numb_lines = input_single(
+        in_message="Enter the number of lines from the end of log file to send",
+        in_type="int",
+        max_number=400,
+    )
+    send_list = input_list(
+        subject="email address",
+        description="to send to (example@gmail.com)",
+        in_type="email",
+    )
+    log_list = input_list(
+        subject="log file",
+        description="to check relative to your home dir (Example: Logs/net_backup.log)",
+        in_type="file",
+    )
+    load = {
+        "runtime": run,
+        "lines": int(numb_lines),
+        "sendto": send_list,
+        "logs": log_list,
+    }
+    save_yaml(fname=f"{conf_dir}/emailog_set.yaml", fdest="home", content=load)
+    print(
+        f'\n{c["YELLOW"]}{c["BOLD"]}This completes the wizard{c["END"]}'
+        f"\nThe configuration file has been written to disk"
+        f"\nIf you want to change the settings you can edit "
+        f'{c["CYAN"]}{c["BOLD"]}{home}/{conf_dir}/emailog_set.yaml{c["END"]}'
+        f'\n{c["GREEN"]}{c["BOLD"]}This wizard '
+        f"won't run any more, So the script can "
+        f'now be run automatically{c["END"]}\n'
+        f'\n{c["CYAN"]}{c["BOLD"]}You can stop '
+        f'the script by typing Ctrl + C{c["END"]}\n'
+    )
