@@ -15,7 +15,7 @@ from colors import (
     prYellowBold,
     prGreen,
     prGreenBold,
-    )
+)
 
 
 __author__ = "Troy Franks"
@@ -64,8 +64,7 @@ def input_list(
                 )
             else:
                 print(
-                    f'{c["RED"]}{c["BOLD"]}This is not a valid '
-                    f'{in_type}{c["END"]}'
+                    f'{c["RED"]}{c["BOLD"]}This is not a valid ' f'{in_type}{c["END"]}'
                 )
             item: str = input(f"Enter the {subject} {description}: ")
         if item.upper() == outword.upper() and len(item_list) != 0:
@@ -103,13 +102,16 @@ def input_single(
         item = input(f"{in_message}: ")
     while (
         validate_input(
-            item=item, in_type=in_type,
-            fdest=fdest, max_number=max_number,
-            ) is False
+            item=item,
+            in_type=in_type,
+            fdest=fdest,
+            max_number=max_number,
+        )
+        is False
     ):
         print(
-            f'{c["RED"]}{c["BOLD"]}'
-            f'This is not a valid {in_type}{c["END"]}',)
+            f'{c["RED"]}{c["BOLD"]}' f'This is not a valid {in_type}{c["END"]}',
+        )
         if in_type == "int" or in_type == "float":
             item = input(f"{in_message}(max {max_number}): ")
         else:
@@ -132,7 +134,6 @@ def validate_input(
     fdest: str = "home",
     max_number: int = 200,
 ):
-
     """
     item = The data entered in the input field,
     email, file, password, int, float, time
@@ -181,6 +182,7 @@ def validate_input(
             return False
     else:
         return False
+
 
 # Wizard setup
 

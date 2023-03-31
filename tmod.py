@@ -488,10 +488,16 @@ def decrypt_login(key: str, e_fname: str, fdest: str = "relative"):
 
 
 # Date/Time//////////////////////////////////////////////
-def day_diff(month: int, day: int, year: int):
+
+
+def day_diff(
+    month: int,
+    day: int,
+    year: int,
+):
     current = date.today()
-    day = date(year, month, day)
-    till_day = day - current
+    day_target = date(year, month, day)
+    till_day = day_target - current
     return till_day.days
 
 
@@ -507,7 +513,10 @@ def time_now() -> str:
 
 
 def from_str_time_meridiem(
-    str_time: str, timestamp: bool = False, utc: bool = False, tzone: str = "US/Eastern"
+    str_time: str,
+    timestamp: bool = False,
+    utc: bool = False,
+    tzone: str = "US/Eastern",
 ):
     """
     Takes a string time with AM or PM,  timestamp = True or False,
@@ -532,10 +541,16 @@ def from_str_time_meridiem(
 
 
 def from_str_time(
-    str_time: str, timestamp: bool = False, utc: bool = False, tzone: str = "US/Eastern"
+    str_time: str,
+    timestamp: bool = False,
+    utc: bool = False,
+    tzone: str = "US/Eastern",
 ):
-    """Pass string time HH:MM, timestamp = True or False,
-    utc = True or False, timezone = 'US/Eastern'
+    """
+    Pass string time HH:MM,
+    timestamp = True or False,
+    utc = True or False,
+    timezone = 'US/Eastern'
     timestamp = False returns datetime object today at that time,
     timestamp = True returns timestamp today at that time
     utc = True  sets timezone to UTC, False sets timezone to local timezone
@@ -558,7 +573,8 @@ def from_str_time(
 
 
 def str_date_from_datetime(dt: datetime):
-    """Datetime return string date
+    """
+    Datetime return string date
     Requires from datetime import datetime
     """
     str_date = dt.strftime("%Y-%m-%d")
@@ -566,7 +582,10 @@ def str_date_from_datetime(dt: datetime):
 
 
 def from_str_date(
-    str_date: str, timestamp: bool = False, utc: bool = False, tzone: str = "US/Eastern"
+    str_date: str,
+    timestamp: bool = False,
+    utc: bool = False,
+    tzone: str = "US/Eastern",
 ):
     """Pass string date YYYY-MM-DD, timestamp = True or False,
     utc = True or False, timezone = 'US/Eastern'
@@ -818,7 +837,7 @@ def input_list(
     item_list = []
     while True:
         item: str = input(f"Enter the {subject} {description}: ")
-        while validate_input(item, in_type) == False:
+        while validate_input(item, in_type) is False:
             if (
                 item == outword
                 or item == outword.capitalize()
@@ -876,13 +895,16 @@ def input_single(
         item = input(f"{in_message}: ")
     while (
         validate_input(
-            item=item, in_type=in_type,
-            fdest=fdest, max_number=max_number,
-            ) is False
+            item=item,
+            in_type=in_type,
+            fdest=fdest,
+            max_number=max_number,
+        )
+        is False
     ):
         print(
-            f'{c["RED"]}{c["BOLD"]}'
-            f'This is not a valid {in_type}{c["END"]}',)
+            f'{c["RED"]}{c["BOLD"]}' f'This is not a valid {in_type}{c["END"]}',
+        )
         if in_type == "int" or in_type == "float":
             item = input(f"{in_message}(max {max_number}): ")
         else:
@@ -899,7 +921,12 @@ def input_single(
         return item
 
 
-def validate_input(item: str, in_type: str, fdest: str = "home", max_number: int = 200,):
+def validate_input(
+    item: str,
+    in_type: str,
+    fdest: str = "home",
+    max_number: int = 200,
+):
     """
     item = The data entered in the input field,
     email, file, password, int, float, time
@@ -908,6 +935,7 @@ def validate_input(item: str, in_type: str, fdest: str = "home", max_number: int
     Takes the input and checks to see if it is
     valid for its data type.
     """
+
     if in_type == "email":
         print(item)
         regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
@@ -949,7 +977,7 @@ def validate_input(item: str, in_type: str, fdest: str = "home", max_number: int
         return False
 
 
-## Wizard setup
+# Wizard setup
 def config_setup(conf_dir: str):
     """
     conf_dir = Configuration dir. This would
